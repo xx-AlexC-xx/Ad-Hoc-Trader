@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/badge'; // You can remove this import if Badge isn't used elsewhere in your file now
 import { supabase } from '@/lib/supabase';
 import LogoutButton from './LogoutButton';
 
@@ -35,11 +34,8 @@ const Header: React.FC = () => {
             <p className="text-sm text-gray-400">AI-Powered Trading Platform</p>
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-4">
-          <Badge variant="secondary" className="bg-green-600 text-white">
-            Balance: $10,000.00
-          </Badge>
           {user && (
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-300">
