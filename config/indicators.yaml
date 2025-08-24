@@ -1,0 +1,21 @@
+# indicators.yaml
+# Technical indicators and their parameters
+
+sma:
+  length: 20
+
+ema:
+  length: 20
+
+rsi:
+  length: 14
+
+macd: {}
+
+bbands:
+  length: 20
+
+obv: {}
+
+adx:
+  length: 14

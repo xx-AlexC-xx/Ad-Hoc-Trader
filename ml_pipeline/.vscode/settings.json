@@ -1,15 +1,48 @@
 {
-  "python.analysis.extraPaths": [
-    "./"
-  ],
-  "terminal.integrated.env.windows": {
-    "PYTHONPATH": "${workspaceFolder}"
-  },
-  "python.envFile": "${workspaceFolder}/.env",
-  "editor.minimap.enabled": false,
-  "pylint.showNotifications": "always",
-  "editor.defaultFormatter": "ms-python.black-formatter",
-  "editor.formatOnSave": true,
-  "diffEditor.codeLens": true,
-  "workbench.settings.useSplitJSON": true
+  // Use the virtual environment's Python interpreter for everything
+  "python.defaultInterpreterPath": "${workspaceFolder}\\venv\\Scripts\\python.exe",
+
+  // Enable linting with pylint inside the same venv
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.pylintPath": "${workspaceFolder}\\venv\\Scripts\\pylint.exe",
+
+  // Include both project root and src folder for imports and IntelliSense
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}",
+    "${workspaceFolder}\\src"
+  ],
+
+  // Add PYTHONPATH to terminal environment for import resolution
+  "terminal.integrated.env.windows": {
+    "PYTHONPATH": "${workspaceFolder};${workspaceFolder}\\src"
+  },
+
+  // Auto-activate venv in VS Code integrated terminal (PowerShell)
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell",
+      "args": [
+        "-NoExit",
+        "-Command",
+        ". '${workspaceFolder}\\venv\\Scripts\\Activate.ps1'"
+      ]
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+
+  // Load environment variables from .env file
+  "python.envFile": "${workspaceFolder}/.env",
+
+  // Editor preferences
+  "editor.minimap.enabled": false,
+  "editor.defaultFormatter": "ms-python.black-formatter",
+  "editor.formatOnSave": true,
+  "diffEditor.codeLens": true,
+  "workbench.settings.useSplitJSON": true,
+  "workbench.editor.enablePreview": false,
+
+  // Disable Deno integration since this is a Python project
+  "deno.enable": false
 }

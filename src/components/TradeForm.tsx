@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAppContext } from '@/contexts/AppContext';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/components/ui/useToast';
 
 interface TradeSignal {
   symbol: string;
@@ -111,8 +111,7 @@ const TradeForm: React.FC<TradeFormProps> = ({ onTradeGenerated, selectedTrades,
       toast({
         title: "Error",
         description: "Failed to generate trade signals",
-        variant: "destructive"
-      });
+              });
     } finally {
       setIsGenerating(false);
     }
@@ -176,8 +175,7 @@ const TradeForm: React.FC<TradeFormProps> = ({ onTradeGenerated, selectedTrades,
       toast({
         title: "Error",
         description: "Failed to execute trade",
-        variant: "destructive"
-      });
+             });
     } finally {
       setIsExecuting(false);
     }

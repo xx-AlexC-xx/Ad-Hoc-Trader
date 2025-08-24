@@ -1,0 +1,29 @@
+{
+  // --- TypeScript / Deno for Supabase ---
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "deno.enable": true,
+  "deno.lint": true,
+  "deno.unstable": true,
+  "deno.importMap": "./import_map.json",
+  "files.associations": {
+    "**/supabase/functions/**/*.ts": "typescript"
+  },
+
+  // --- Python / Supabase backend ---
+  "python.terminal.activateEnvironment": true,
+  "python.analysis.extraPaths": ["./ml_pipeline"],
+  "python.envFile": "${workspaceFolder}/.env",
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.lintOnSave": true,
+  "python.linting.pylintPath": "${workspaceFolder}/venv/Scripts/pylint.exe",
+  "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
+
+  // --- Editor Enhancements ---
+  "editor.defaultFormatter": "ms-python.black-formatter",
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
+  "diffEditor.codeLens": true,
+  "workbench.settings.useSplitJSON": true,
+  "workbench.editor.enablePreview": false
+}

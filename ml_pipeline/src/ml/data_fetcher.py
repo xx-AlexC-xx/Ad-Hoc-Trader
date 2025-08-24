@@ -6,7 +6,6 @@
 Fetch stock data from Alpha Vantage API and upload to Supabase.
 """
 
-from datetime import datetime
 import os
 import requests
 import pandas as pd

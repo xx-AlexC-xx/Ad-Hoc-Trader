@@ -1,10 +1,14 @@
+// src/components/Header.tsx
+
 import React, { useEffect, useState } from 'react';
-import { Badge } from '@/components/ui/badge'; // You can remove this import if Badge isn't used elsewhere in your file now
 import { supabase } from '@/lib/supabase';
 import LogoutButton from './LogoutButton';
+import { useTheme } from 'next-themes';
+import { Button } from '@/components/ui/button'; // Ensure this import exists
 
 const Header: React.FC = () => {
   const [user, setUser] = useState<any>(null);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     // Get current session
@@ -23,10 +27,11 @@ const Header: React.FC = () => {
   return (
     <header className="bg-black text-white p-4 border-b border-gray-800">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
+        {/* Left: Logo and Titles */}
         <div className="flex items-center space-x-4">
-          <img 
-            src="https://d64gsuwffb70l.cloudfront.net/683e88b9e6e8029a192a1882_1749807866484_e86fbe99.PNG" 
-            alt="ADHOC Trading" 
+          <img
+            src="https://d64gsuwffb70l.cloudfront.net/683e88b9e6e8029a192a1882_1749807866484_e86fbe99.PNG"
+            alt="ADHOC Trading"
             className="h-12 w-auto"
           />
           <div>
@@ -35,7 +40,18 @@ const Header: React.FC = () => {
           </div>
         </div>
 
+        {/* Right: User Info, Theme Toggle, Refresh */}
         <div className="flex items-center space-x-4">
+          {/* 🔁 Refresh Button */}
+          <Button
+            variant="ghost"
+            onClick={() => window.location.reload()}
+            className="text-white hover:bg-gray-800"
+          >
+            🔄 Refresh
+          </Button>
+
+            {/* 👤 User Info + Logout */}
           {user && (
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-300">

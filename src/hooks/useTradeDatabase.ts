@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { toast } from '@/components/ui/use-toast';
+import { toast as baseToast } from '@/components/ui/useToast';
+
+// Create a typed wrapper around the existing toast function
+type ToastOptions = Parameters<typeof baseToast>[0];
+interface ExtendedToastOptions extends ToastOptions {
+  variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
+}
+const toast = (options: ExtendedToastOptions) => baseToast(options);
 
 interface Trade {
   id: string;

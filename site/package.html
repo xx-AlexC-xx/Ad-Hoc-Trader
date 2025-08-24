@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>Package - AdHoc_Trader</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/fontawesome.min.css" rel="stylesheet">
+        <link href="css/brands.min.css" rel="stylesheet">
+        <link href="css/solid.min.css" rel="stylesheet">
+        <link href="css/v4-font-face.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">AdHoc_Trader</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="index.html" class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Project Configs</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="index.html.html" class="dropdown-item">index.html</a>
+</li>
+                                    
+<li>
+    <a href="deno.json.html" class="dropdown-item">Deno.Config</a>
+</li>
+                                    
+<li>
+    <a href="component.json.html" class="dropdown-item">Component.json</a>
+</li>
+                                    
+<li>
+    <a href="eslint.config.html" class="dropdown-item">ESLint Config</a>
+</li>
+                                    
+<li>
+    <a href="import_map.html" class="dropdown-item">Import Map</a>
+</li>
+                                    
+<li>
+    <a href="package.html" class="dropdown-item active" aria-current="page">Package</a>
+</li>
+                                    
+<li>
+    <a href="package-lock.html" class="dropdown-item">Package-lock</a>
+</li>
+                                    
+<li>
+    <a href="postcss.config.html" class="dropdown-item">PostCSS Config</a>
+</li>
+                                    
+<li>
+    <a href="tailwind.config.ts.html" class="dropdown-item">Tailwind Config</a>
+</li>
+                                    
+<li>
+    <a href="tailwind.config.js.html" class="dropdown-item">Tailwind Config JS</a>
+</li>
+                                    
+<li>
+    <a href="tsconfig.node.html" class="dropdown-item">TS Config Node</a>
+</li>
+                                    
+<li>
+    <a href="vite-env.d.ts.html" class="dropdown-item">Vite Env Types</a>
+</li>
+                                    
+<li>
+    <a href="vite.config.html" class="dropdown-item">Vite Config</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Dependencies</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="dependencies/dependencies.html" class="dropdown-item">Dependencies</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">VSCode</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="VSCode/settings.json.html" class="dropdown-item">VSCode Settings</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">ML Pipeline</a>
+                                <ul class="dropdown-menu">
+                                    
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">Historical Ingestion</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="ml_pipeline/historical_ingestion/alpha_vantage_client.html" class="dropdown-item">Alpha Vantage Client</a>
+</li>
+            
+<li>
+    <a href="ml_pipeline/historical_ingestion/config.py.html" class="dropdown-item">Config</a>
+</li>
+            
+<li>
+    <a href="ml_pipeline/historical_ingestion/ingest_historical.html" class="dropdown-item">Ingestion Historical</a>
+</li>
+            
+<li>
+    <a href="ml_pipeline/historical_ingestion/run_pipeline.html" class="dropdown-item">Run Pipeline</a>
+</li>
+            
+<li>
+    <a href="ml_pipeline/historical_ingestion/supabase_client.html" class="dropdown-item">Supabase Client</a>
+</li>
+            
+<li>
+    <a href="ml_pipeline/historical_ingestion/utils.html" class="dropdown-item">Utils</a>
+</li>
+    </ul>
+  </li>
+                                    
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">Source</a>
+    <ul class="dropdown-menu">
+            
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">DL</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="ml_pipeline/src/dl/lstm_model.html" class="dropdown-item">LSTM Model</a>
+</li>
+    </ul>
+  </li>
+            
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">ML</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="ml_pipeline/src/ml/data_fetcher.html" class="dropdown-item">Data Fetcher</a>
+</li>
+            
+<li>
+    <a href="ml_pipeline/src/ml/feature_engineer.html" class="dropdown-item">Feature Engineering</a>
+</li>
+            
+<li>
+    <a href="ml_pipeline/src/ml/predictor.html" class="dropdown-item">Predictor</a>
+</li>
+            
+<li>
+    <a href="ml_pipeline/src/ml/supabase_uploader.html" class="dropdown-item">Supabase Uploader</a>
+</li>
+            
+<li>
+    <a href="ml_pipeline/src/ml/train_model.html" class="dropdown-item">Training Model</a>
+</li>
+    </ul>
+  </li>
+    </ul>
+  </li>
+                                    
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">Tests</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="ml_pipeline/test/test_normalization.html" class="dropdown-item">Test Normalization</a>
+</li>
+    </ul>
+  </li>
+                                    
+<li>
+    <a href="ml_pipeline/requirements.html" class="dropdown-item">Requirements</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="import_map.html" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="package-lock.html" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#packagejson-overview" class="nav-link">package.json Overview</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#project-metadata" class="nav-link">Project Metadata</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#scripts" class="nav-link">Scripts</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="packagejson-overview">package.json Overview<a class="headerlink" href="#packagejson-overview" title="Permanent link">&para;</a></h1>
+<p>The <code>package.json</code> file defines your project metadata, dependencies, development tools, and scripts.</p>
+<hr />
+<h2 id="project-metadata">Project Metadata<a class="headerlink" href="#project-metadata" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>name:</strong> <code>vite_react_shadcn_ts</code></li>
+<li><strong>version:</strong> <code>0.0.0</code></li>
+<li><strong>private:</strong> true (not published publicly)</li>
+<li><strong>type:</strong> module (ES Modules enabled)</li>
+</ul>
+<hr />
+<h2 id="scripts">Scripts<a class="headerlink" href="#scripts" title="Permanent link">&para;</a></h2>
+<p>These are the npm scripts you can run:</p>
+<table>
+<thead>
+<tr>
+<th>Script</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dev</code></td>
+<td>Start development server (<code>vite</code>)</td>
+</tr>
+<tr>
+<td><code>build</code></td>
+<td>Build production assets</td>
+</tr>
+<tr>
+<td><code>build:dev</code></td>
+<td>Build with development mode</td>
+</tr>
+<tr>
+<td><code>lint</code></td>
+<td>Run ESLint to check code quality</td>
+</tr>
+<tr>
+<td><code>preview</code></td>
+<td>Preview the production build</td>
+</tr>
+</tbody>
+</table>
+<p>Run scripts like this:</p>
+<p>```bash
+npm run dev</p>
+<p>Dependencies
+Your runtime dependencies include:</p>
+<p>UI &amp; React ecosystem:</p>
+<p>react ^18.3.1, react-dom ^18.3.1</p>
+<p>@radix-ui/* (various UI primitives)</p>
+<p>shadcn/ui components (implied by Radix usage)</p>
+<p>lucide-react icons</p>
+<p>clsx, class-variance-authority for class management</p>
+<p>cmdk command palette</p>
+<p>recharts charting</p>
+<p>Backend / Data:</p>
+<p>@supabase/supabase-js ^2.49.4 and auth helpers</p>
+<p>axios for HTTP requests</p>
+<p>uuid for unique IDs</p>
+<p>zod for schema validation</p>
+<p>Utility:</p>
+<p>date-fns for date utilities</p>
+<p>marked markdown parser</p>
+<p>react-hook-form and resolver for forms</p>
+<p>react-router-dom for routing</p>
+<p>react-day-picker for date picking UI</p>
+<p>sonner for notifications</p>
+<p>tailwind-merge &amp; tailwindcss-animate for CSS utilities</p>
+<p>vaul (likely for state or storage)</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = ".",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="js/base.js"></script>
+        <script src="search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

@@ -1,10 +1,12 @@
 """Module that uploads stock market data to Supabase from Alpha Vantage."""
 
+import logging
 import os
 from datetime import datetime, timezone
+from requests.exceptions import RequestException
 from dotenv import load_dotenv
-from supabase import create_client, Client
 import pandas as pd
+from supabase import create_client, Client
 
 
 # Load environment variables
@@ -13,6 +15,11 @@ load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE")
 TABLE_NAME = "stock_prices"
+
+
+class SupabaseUploadError(Exception):
+    """Raised when Supabase data upload fails."""
+
 
 if not SUPABASE_URL or not SUPABASE_KEY:
     raise ValueError("❌ Missing Supabase credentials. Check your .env file.")
@@ -44,12 +51,15 @@ def upload_to_supabase(df: pd.DataFrame, symbol: str) -> None:
             response = supabase.table(TABLE_NAME).upsert(chunk).execute()
 
             if not response.data:
-                raise Exception("No data returned — possible insert error")
+                raise SupabaseUploadError(
+                    "Upload failed to Supabase: invalid response or empty data"
+                )
 
-        print(f"✅ Uploaded {len(records)} rows for {symbol} to Supabase.")
+        logging.info("✅ Uploaded %d rows for %s to Supabase.", len(records), symbol)
 
-    except Exception as e:
-        print(f"❌ Error uploading to Supabase: {e}")
+    except (ValueError, KeyError, RequestException) as e:
+        logging.error("Upload failed due to known error: %s", e)
+        raise SupabaseUploadError(f"Upload failed due to known error: {e}") from e
 
 
 # Optional test runner

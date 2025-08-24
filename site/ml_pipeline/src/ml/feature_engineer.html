@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<html data-bs-theme="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>Feature Engineering - AdHoc_Trader</title>
+<link href="../../../css/bootstrap.min.css" rel="stylesheet"/>
+<link href="../../../css/fontawesome.min.css" rel="stylesheet"/>
+<link href="../../../css/brands.min.css" rel="stylesheet"/>
+<link href="../../../css/solid.min.css" rel="stylesheet"/>
+<link href="../../../css/v4-font-face.min.css" rel="stylesheet"/>
+<link href="../../../css/base.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" id="hljs-light" rel="stylesheet"/>
+<link disabled="" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" id="hljs-dark" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body>
+<div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+<div class="container">
+<a class="navbar-brand" href="../../../index.html">AdHoc_Trader</a>
+<!-- Expander button -->
+<button aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar-collapse" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<!-- Expanded navigation -->
+<div class="navbar-collapse collapse" id="navbar-collapse">
+<!-- Main navigation -->
+<ul class="nav navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="../../../index.html">Home</a>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Project Configs</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../../index.html.html">index.html</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../deno.json.html">Deno.Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../component.json.html">Component.json</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../eslint.config.html">ESLint Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../import_map.html">Import Map</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../package.html">Package</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../package-lock.html">Package-lock</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../postcss.config.html">PostCSS Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../tailwind.config.ts.html">Tailwind Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../tailwind.config.js.html">Tailwind Config JS</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../tsconfig.node.html">TS Config Node</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../vite-env.d.ts.html">Vite Env Types</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../vite.config.html">Vite Config</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Dependencies</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../../dependencies/dependencies.html">Dependencies</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">VSCode</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../../VSCode/settings.json.html">VSCode Settings</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-current="page" aria-expanded="false" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button">ML Pipeline</a>
+<ul class="dropdown-menu">
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">Historical Ingestion</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../historical_ingestion/alpha_vantage_client.html">Alpha Vantage Client</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../historical_ingestion/config.py.html">Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../historical_ingestion/ingest_historical.html">Ingestion Historical</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../historical_ingestion/run_pipeline.html">Run Pipeline</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../historical_ingestion/supabase_client.html">Supabase Client</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../historical_ingestion/utils.html">Utils</a>
+</li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">Source</a>
+<ul class="dropdown-menu">
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">DL</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../dl/lstm_model.html">LSTM Model</a>
+</li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">ML</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="data_fetcher.html">Data Fetcher</a>
+</li>
+<li>
+<a aria-current="page" class="dropdown-item active" href="feature_engineer.html">Feature Engineering</a>
+</li>
+<li>
+<a class="dropdown-item" href="predictor.html">Predictor</a>
+</li>
+<li>
+<a class="dropdown-item" href="supabase_uploader.html">Supabase Uploader</a>
+</li>
+<li>
+<a class="dropdown-item" href="train_model.html">Training Model</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">Tests</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../test/test_normalization.html">Test Normalization</a>
+</li>
+</ul>
+</li>
+<li>
+<a class="dropdown-item" href="../../requirements.html">Requirements</a>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="nav navbar-nav ms-md-auto">
+<li class="nav-item">
+<a class="nav-link" data-bs-target="#mkdocs_search_modal" data-bs-toggle="modal" href="#">
+<i class="fa fa-search"></i> Search
+                            </a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="data_fetcher.html" rel="prev">
+<i class="fa fa-arrow-left"></i> Previous
+                                </a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="predictor.html" rel="next">
+                                    Next <i class="fa fa-arrow-right"></i>
+</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="container">
+<div class="row">
+<div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+<div class="navbar-header">
+<button class="navbar-toggler collapsed" data-bs-target="#toc-collapse" data-bs-toggle="collapse" title="Table of Contents" type="button">
+<span class="fa fa-angle-down"></span>
+</button>
+</div>
+<div class="navbar-collapse collapse card bg-body-tertiary" id="toc-collapse">
+<ul class="nav flex-column">
+<li class="nav-item" data-bs-level="1"><a class="nav-link" href="#feature_engineerpy">feature_engineer.py</a>
+<ul class="nav flex-column">
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#location">📁 Location</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#function-feature_engineer-df-pddataframe-pddataframe">Function: feature_engineer (df: pd.DataFrame) -&gt; pd.DataFrame</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#technical-indicators-used">📊 Technical Indicators Used</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#output-example">✅ Output Example</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#dependencies">🧩 Dependencies</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div></div>
+<div class="col-md-9" role="main">
+<h1 id="feature_engineerpy">feature_engineer.py<a class="headerlink" href="#feature_engineerpy" title="Permanent link">¶</a></h1>
+<p>This module provides the <strong>featured enginering</strong> for stock price time series data. It uses <strong><code>pandas-ta</code></strong> to compute a variety of <strong>technical indicators</strong> commonly used in algorithmic trading and quantitative analysis.</p>
+<hr/>
+<h2 id="location">📁 Location<a class="headerlink" href="#location" title="Permanent link">¶</a></h2>
+<p><code>src/ml/feature_engineer.py</code></p>
+<hr/>
+<h2 id="function-feature_engineer-df-pddataframe-pddataframe">Function: <code>feature_engineer (df: pd.DataFrame) -&gt; pd.DataFrame</code><a class="headerlink" href="#function-feature_engineer-df-pddataframe-pddataframe" title="Permanent link">¶</a></h2>
+<h3 id="description">Description<a class="headerlink" href="#description" title="Permanent link">¶</a></h3>
+<p>Enhances the input DataFrame with multiple technical indicators and returns the transformed version with new features.</p>
+<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">¶</a></h3>
+<ul>
+<li><code>df</code> (<code>pd.DataFrame</code>): A DataFrame indexed by datetime with at least the following columns:</li>
+<li><code>"open"</code></li>
+<li><code>"high"</code></li>
+<li><code>"low"</code></li>
+<li><code>"close"</code></li>
+<li><code>"volume"</code></li>
+</ul>
+<h3 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">¶</a></h3>
+<ul>
+<li><code>pd.DataFrame</code>: A new DataFrame including:</li>
+<li>Original OHLCV columns</li>
+<li>Appended technical indicators</li>
+<li>Cleaned to remove any <code>NaN</code> rows caused by rolling windows</li>
+</ul>
+<h3 id="raises">Raises<a class="headerlink" href="#raises" title="Permanent link">¶</a></h3>
+<ul>
+<li><code>ValueError</code>: If the input DataFrame is empty.</li>
+</ul>
+<hr/>
+<h2 id="technical-indicators-used">📊 Technical Indicators Used<a class="headerlink" href="#technical-indicators-used" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SMA</td>
+<td><code>ta.sma(length=20)</code></td>
+<td>Simple moving average</td>
+</tr>
+<tr>
+<td>EMA</td>
+<td><code>ta.ema(length=20)</code></td>
+<td>Exponential moving average</td>
+</tr>
+<tr>
+<td>RSI</td>
+<td><code>ta.rsi(length=14)</code></td>
+<td>Measures price momentum</td>
+</tr>
+<tr>
+<td>MACD</td>
+<td><code>ta.macd()</code></td>
+<td>Trend-following momentum</td>
+</tr>
+<tr>
+<td>BBANDS</td>
+<td><code>ta.bbands(length=20)</code></td>
+<td>Bollinger Bands (volatility)</td>
+</tr>
+<tr>
+<td>OBV</td>
+<td><code>ta.obv()</code></td>
+<td>On-Balance Volume</td>
+</tr>
+<tr>
+<td>ADX</td>
+<td><code>ta.adx(length=14)</code></td>
+<td>Average Directional Index</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="output-example">✅ Output Example<a class="headerlink" href="#output-example" title="Permanent link">¶</a></h2>
+<p>After feature engineering:
+- Output DataFrame might contain <strong>40+ columns</strong> (depending on the number of sub-indicators from MACD, BBANDS, etc.)
+- All NaN rows from the initial rolling period are removed
+- Prints:
+✅ Engineered features: 42 columns, 85 rows.</p>
+<hr/>
+<h2 id="dependencies">🧩 Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">¶</a></h2>
+<ul>
+<li><code>pandas</code></li>
+<li><code>pandas-ta</code> <em>(must be installed separately)</em></li>
+</ul>
+<p>Install with:</p>
+<pre><code class="language-bash">pip install pandas-ta
+🧪 Example Usage
+
+import pandas as pd
+from src.ml.engineer_features import engineer_features
+
+df = pd.read_csv("AAPL_60min.csv", index_col=0, parse_dates=True)
+df = engineer_features(df)
+print(df.head())
+*****  **Notes**
+**Be sure to run this on pre-cleaned stock price data with datetime index**
+
+If using Supabase or another database downstream, consider filtering/flattening the columns for compatibility.
+
+Missing index format or volume column will break certain indicators.
+
+
+
+---
+## Process Flow
+---
+
+```mermaid
+  flowchart TD
+    A[Start: Input DataFrame] --&gt; B[Its Dataframe empty]
+    B -- Yes --&gt; Z[Raise Value Error]
+    B -- No --&gt; C[Copy DataFrame]
+    C --&gt; D{[Is Index Datetime]}
+    D -- No --&gt; E[Convert Index to Datetime]
+    D -- Yes --&gt; F[Proceed]
+    E --&gt; F
+    F --&gt; G[Apply SMA (Length=20)]
+    G --&gt; H[Apply EMA (Length=20)]
+    H --&gt; I[Apply RSI (Length=14)]
+    I --&gt; J[Apply MACD]
+    J --&gt; K[Apply Bollinger Bands (Length=20)]
+    K --&gt; L[Apply OBV]
+    L --&gt; M[Apply ADX (Length=14)]
+    M --&gt; N[Drop NaN rows]
+    N --&gt; O[Print Shape Info]
+    O --&gt; P[Return DataFrame]
+</code></pre>
+<pre><code>---
+```mermaid
+flowchart TD
+  A[Start: Input DataFrame] --&gt; B{Is DataFrame empty?}
+  B -- Yes --&gt; Z[Raise ValueError]
+  B -- No --&gt; C[Copy DataFrame]
+  C --&gt; D{Is Index Datetime?}
+  D -- No --&gt; E[Convert Index to Datetime]
+  D -- Yes --&gt; F[Proceed]
+  E --&gt; F
+  F --&gt; G[Apply SMA (Length=20)]
+  G --&gt; H[Apply EMA (Length=20)]
+  H --&gt; I[Apply RSI (Length=14)]
+  I --&gt; J[Apply MACD]
+  J --&gt; K[Apply Bollinger Bands (Length=20)]
+  K --&gt; L[Apply OBV]
+  L --&gt; M[Apply ADX (Length=14)]
+  M --&gt; N[Drop NaN rows]
+  N --&gt; O[Print Shape Info]
+  O --&gt; P[Return DataFrame]
+</code></pre></div>
+</div>
+</div>
+<footer class="col-md-12">
+<hr/>
+<p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+</footer>
+<script src="../../../js/bootstrap.bundle.min.js"></script>
+<script>
+            var base_url = "../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+<script src="../../../js/base.js"></script>
+<script src="../../../search/main.js"></script>
+<div aria-hidden="true" aria-labelledby="searchModalLabel" class="modal" id="mkdocs_search_modal" role="dialog" tabindex="-1">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title" id="searchModalLabel">Search</h4>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<p>From here you can search these documents. Enter your search terms below.</p>
+<form>
+<div class="form-group">
+<input class="form-control" id="mkdocs-search-query" placeholder="Search..." title="Type search term here" type="search"/>
+</div>
+</form>
+<div data-no-results-text="No results found" id="mkdocs-search-results"></div>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div><div aria-hidden="true" aria-labelledby="keyboardModalLabel" class="modal" id="mkdocs_keyboard_modal" role="dialog" tabindex="-1">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<table class="table">
+<thead>
+<tr>
+<th style="width: 20%;">Keys</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="help shortcut"><kbd>?</kbd></td>
+<td>Open this help</td>
+</tr>
+<tr>
+<td class="next shortcut"><kbd>n</kbd></td>
+<td>Next page</td>
+</tr>
+<tr>
+<td class="prev shortcut"><kbd>p</kbd></td>
+<td>Previous page</td>
+</tr>
+<tr>
+<td class="search shortcut"><kbd>s</kbd></td>
+<td>Search</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

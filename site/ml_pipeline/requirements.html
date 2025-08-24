@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+
+<html data-bs-theme="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../img/favicon.ico" rel="shortcut icon"/>
+<title>Requirements - AdHoc_Trader</title>
+<link href="../css/bootstrap.min.css" rel="stylesheet"/>
+<link href="../css/fontawesome.min.css" rel="stylesheet"/>
+<link href="../css/brands.min.css" rel="stylesheet"/>
+<link href="../css/solid.min.css" rel="stylesheet"/>
+<link href="../css/v4-font-face.min.css" rel="stylesheet"/>
+<link href="../css/base.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" id="hljs-light" rel="stylesheet"/>
+<link disabled="" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" id="hljs-dark" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body>
+<div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+<div class="container">
+<a class="navbar-brand" href="../index.html">AdHoc_Trader</a>
+<!-- Expander button -->
+<button aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar-collapse" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<!-- Expanded navigation -->
+<div class="navbar-collapse collapse" id="navbar-collapse">
+<!-- Main navigation -->
+<ul class="nav navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="../index.html">Home</a>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Project Configs</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../index.html.html">index.html</a>
+</li>
+<li>
+<a class="dropdown-item" href="../deno.json.html">Deno.Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="../component.json.html">Component.json</a>
+</li>
+<li>
+<a class="dropdown-item" href="../eslint.config.html">ESLint Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="../import_map.html">Import Map</a>
+</li>
+<li>
+<a class="dropdown-item" href="../package.html">Package</a>
+</li>
+<li>
+<a class="dropdown-item" href="../package-lock.html">Package-lock</a>
+</li>
+<li>
+<a class="dropdown-item" href="../postcss.config.html">PostCSS Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="../tailwind.config.ts.html">Tailwind Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="../tailwind.config.js.html">Tailwind Config JS</a>
+</li>
+<li>
+<a class="dropdown-item" href="../tsconfig.node.html">TS Config Node</a>
+</li>
+<li>
+<a class="dropdown-item" href="../vite-env.d.ts.html">Vite Env Types</a>
+</li>
+<li>
+<a class="dropdown-item" href="../vite.config.html">Vite Config</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Dependencies</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../dependencies/dependencies.html">Dependencies</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">VSCode</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../VSCode/settings.json.html">VSCode Settings</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-current="page" aria-expanded="false" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button">ML Pipeline</a>
+<ul class="dropdown-menu">
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">Historical Ingestion</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="historical_ingestion/alpha_vantage_client.html">Alpha Vantage Client</a>
+</li>
+<li>
+<a class="dropdown-item" href="historical_ingestion/config.py.html">Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="historical_ingestion/ingest_historical.html">Ingestion Historical</a>
+</li>
+<li>
+<a class="dropdown-item" href="historical_ingestion/run_pipeline.html">Run Pipeline</a>
+</li>
+<li>
+<a class="dropdown-item" href="historical_ingestion/supabase_client.html">Supabase Client</a>
+</li>
+<li>
+<a class="dropdown-item" href="historical_ingestion/utils.html">Utils</a>
+</li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">Source</a>
+<ul class="dropdown-menu">
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">DL</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="src/dl/lstm_model.html">LSTM Model</a>
+</li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">ML</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="src/ml/data_fetcher.html">Data Fetcher</a>
+</li>
+<li>
+<a class="dropdown-item" href="src/ml/feature_engineer.html">Feature Engineering</a>
+</li>
+<li>
+<a class="dropdown-item" href="src/ml/predictor.html">Predictor</a>
+</li>
+<li>
+<a class="dropdown-item" href="src/ml/supabase_uploader.html">Supabase Uploader</a>
+</li>
+<li>
+<a class="dropdown-item" href="src/ml/train_model.html">Training Model</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">Tests</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="test/test_normalization.html">Test Normalization</a>
+</li>
+</ul>
+</li>
+<li>
+<a aria-current="page" class="dropdown-item active" href="requirements.html">Requirements</a>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="nav navbar-nav ms-md-auto">
+<li class="nav-item">
+<a class="nav-link" data-bs-target="#mkdocs_search_modal" data-bs-toggle="modal" href="#">
+<i class="fa fa-search"></i> Search
+                            </a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="test/test_normalization.html" rel="prev">
+<i class="fa fa-arrow-left"></i> Previous
+                                </a>
+</li>
+<li class="nav-item">
+<a class="nav-link disabled" rel="next">
+                                    Next <i class="fa fa-arrow-right"></i>
+</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="container">
+<div class="row">
+<div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+<div class="navbar-header">
+<button class="navbar-toggler collapsed" data-bs-target="#toc-collapse" data-bs-toggle="collapse" title="Table of Contents" type="button">
+<span class="fa fa-angle-down"></span>
+</button>
+</div>
+<div class="navbar-collapse collapse card bg-body-tertiary" id="toc-collapse">
+<ul class="nav flex-column">
+<li class="nav-item" data-bs-level="1"><a class="nav-link" href="#python-requirements">📦 Python Requirements</a>
+<ul class="nav flex-column">
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#core-libraries">🧱 Core Libraries</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#web-and-api-libraries">🌐 Web and API Libraries</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#supabase-integration">🔗 Supabase Integration</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#markdown-documentation">📘 Markdown &amp; Documentation</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#development-tools">🛠️ Development Tools</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#utilities-config">🧰 Utilities &amp; Config</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#installation-command">✅ Installation Command</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div></div>
+<div class="col-md-9" role="main">
+<h1 id="python-requirements">📦 Python Requirements<a class="headerlink" href="#python-requirements" title="Permanent link">¶</a></h1>
+<p>This file lists all required Python packages for the <strong>AdHoc_Trader</strong> project. These packages are pinned to specific versions for consistent builds.</p>
+<p><strong>File</strong>: <code>requirements.txt</code></p>
+<hr/>
+<h2 id="core-libraries">🧱 Core Libraries<a class="headerlink" href="#core-libraries" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Package</strong></th>
+<th><strong>Version</strong></th>
+<th><strong>Purpose</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pydantic</td>
+<td>2.11.7</td>
+<td>Data validation and settings management using Python type annotations.</td>
+</tr>
+<tr>
+<td>pydantic_core</td>
+<td>2.33.2</td>
+<td>Low-level core of Pydantic.</td>
+</tr>
+<tr>
+<td>typing_extensions</td>
+<td>4.14.1</td>
+<td>Backports for new typing features.</td>
+</tr>
+<tr>
+<td>typing-inspection</td>
+<td>0.4.1</td>
+<td>Runtime inspection utilities for types.</td>
+</tr>
+<tr>
+<td>annotated-types</td>
+<td>0.7.0</td>
+<td>Defines annotated types to improve Pydantic models.</td>
+</tr>
+<tr>
+<td>StrEnum</td>
+<td>0.4.15</td>
+<td>Enum base class that serializes to strings.</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="web-and-api-libraries">🌐 Web and API Libraries<a class="headerlink" href="#web-and-api-libraries" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Package</strong></th>
+<th><strong>Version</strong></th>
+<th><strong>Purpose</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>httpx</td>
+<td>0.28.1</td>
+<td>Async HTTP client.</td>
+</tr>
+<tr>
+<td>requests</td>
+<td>2.32.4</td>
+<td>Standard HTTP client.</td>
+</tr>
+<tr>
+<td>httpcore</td>
+<td>1.0.9</td>
+<td>Core HTTP engine used by HTTPX.</td>
+</tr>
+<tr>
+<td>h11</td>
+<td>0.16.0</td>
+<td>HTTP/1.1 client/server protocol.</td>
+</tr>
+<tr>
+<td>h2</td>
+<td>4.2.0</td>
+<td>HTTP/2 protocol support.</td>
+</tr>
+<tr>
+<td>hyperframe</td>
+<td>6.1.0</td>
+<td>Frame-based protocol layer for HTTP/2.</td>
+</tr>
+<tr>
+<td>idna</td>
+<td>3.10</td>
+<td>Internationalized Domain Names.</td>
+</tr>
+<tr>
+<td>certifi</td>
+<td>2025.7.14</td>
+<td>SSL certificates.</td>
+</tr>
+<tr>
+<td>urllib3</td>
+<td>2.5.0</td>
+<td>HTTP library used with requests.</td>
+</tr>
+<tr>
+<td>charset-normalizer</td>
+<td>3.4.2</td>
+<td>Character encoding auto-detection.</td>
+</tr>
+<tr>
+<td>sniffio</td>
+<td>1.3.1</td>
+<td>Async environment sniffing.</td>
+</tr>
+<tr>
+<td>anyio</td>
+<td>4.9.0</td>
+<td>Async concurrency library used by HTTPX.</td>
+</tr>
+<tr>
+<td>websockets</td>
+<td>15.0.1</td>
+<td>WebSocket support.</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="supabase-integration">🔗 Supabase Integration<a class="headerlink" href="#supabase-integration" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Package</strong></th>
+<th><strong>Version</strong></th>
+<th><strong>Purpose</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>supabase</td>
+<td>2.17.0</td>
+<td>Supabase Python SDK.</td>
+</tr>
+<tr>
+<td>gotrue</td>
+<td>2.12.3</td>
+<td>Auth client for Supabase.</td>
+</tr>
+<tr>
+<td>postgrest</td>
+<td>1.1.1</td>
+<td>REST API layer over PostgreSQL.</td>
+</tr>
+<tr>
+<td>realtime</td>
+<td>2.6.0</td>
+<td>Realtime communication with Supabase.</td>
+</tr>
+<tr>
+<td>storage3</td>
+<td>0.12.0</td>
+<td>Supabase storage access.</td>
+</tr>
+<tr>
+<td>supafunc</td>
+<td>0.10.1</td>
+<td>Serverless function utilities for Supabase.</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="markdown-documentation">📘 Markdown &amp; Documentation<a class="headerlink" href="#markdown-documentation" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Package</strong></th>
+<th><strong>Version</strong></th>
+<th><strong>Purpose</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mkdocs</td>
+<td>1.6.1</td>
+<td>Static site generator.</td>
+</tr>
+<tr>
+<td>mkdocs-material</td>
+<td>9.6.16</td>
+<td>Material design theme for MkDocs.</td>
+</tr>
+<tr>
+<td>mkdocs-material-extensions</td>
+<td>1.3.1</td>
+<td>Extra features for Material theme.</td>
+</tr>
+<tr>
+<td>mkdocs-get-deps</td>
+<td>0.2.0</td>
+<td>MkDocs plugin to extract Python dependencies.</td>
+</tr>
+<tr>
+<td>mkdocs-mermaid2-plugin</td>
+<td>1.2.1</td>
+<td>Markdown Extension Mermaid.js</td>
+</tr>
+<tr>
+<td>pymdown-extensions</td>
+<td>10.16.1</td>
+<td>Markdown extensions (used in Material theme).</td>
+</tr>
+<tr>
+<td>Markdown</td>
+<td>3.8.2</td>
+<td>Core Python Markdown parser.</td>
+</tr>
+<tr>
+<td>ghp-import</td>
+<td>2.1.0</td>
+<td>Publish MkDocs site to GitHub Pages.</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="development-tools">🛠️ Development Tools<a class="headerlink" href="#development-tools" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Package</strong></th>
+<th><strong>Version</strong></th>
+<th><strong>Purpose</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pylint</td>
+<td>3.3.7</td>
+<td>Code analysis / linter.</td>
+</tr>
+<tr>
+<td>isort</td>
+<td>6.0.1</td>
+<td>Sorts imports.</td>
+</tr>
+<tr>
+<td>astroid</td>
+<td>3.3.11</td>
+<td>Abstract syntax tree for Python.</td>
+</tr>
+<tr>
+<td>mccabe</td>
+<td>0.7.0</td>
+<td>Complexity checker (used by pylint).</td>
+</tr>
+<tr>
+<td>deprecation</td>
+<td>2.1.0</td>
+<td>Mark deprecated code.</td>
+</tr>
+<tr>
+<td>watchdog</td>
+<td>6.0.0</td>
+<td>File watching utilities.</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="utilities-config">🧰 Utilities &amp; Config<a class="headerlink" href="#utilities-config" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Package</strong></th>
+<th><strong>Version</strong></th>
+<th><strong>Purpose</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dill</td>
+<td>0.4.0</td>
+<td>Serialize Python objects (better than pickle).</td>
+</tr>
+<tr>
+<td>click</td>
+<td>8.2.2</td>
+<td>Command-line utilities.</td>
+</tr>
+<tr>
+<td>colorama</td>
+<td>0.4.6</td>
+<td>Colored terminal output.</td>
+</tr>
+<tr>
+<td>python-dotenv</td>
+<td>1.1.1</td>
+<td>Loads environment variables from .env.</td>
+</tr>
+<tr>
+<td>pyyaml</td>
+<td>6.0.2</td>
+<td>YAML parser.</td>
+</tr>
+<tr>
+<td>pyyaml_env_tag</td>
+<td>1.1</td>
+<td>Adds !ENV support to pyyaml.</td>
+</tr>
+<tr>
+<td>pathspec</td>
+<td>0.12.1</td>
+<td>Filesystem pattern matching.</td>
+</tr>
+<tr>
+<td>platformdirs</td>
+<td>4.3.8</td>
+<td>OS-specific dirs for config/data/cache.</td>
+</tr>
+<tr>
+<td>mergedeep</td>
+<td>1.3.4</td>
+<td>Deep merge dictionaries.</td>
+</tr>
+<tr>
+<td>babel</td>
+<td>2.17.0</td>
+<td>i18n/l10n tools.</td>
+</tr>
+<tr>
+<td>paginate</td>
+<td>0.5.7</td>
+<td>Pagination for large lists.</td>
+</tr>
+<tr>
+<td>Jinja2</td>
+<td>3.1.6</td>
+<td>Templating engine.</td>
+</tr>
+<tr>
+<td>MarkupSafe</td>
+<td>3.0.2</td>
+<td>Required by Jinja2.</td>
+</tr>
+<tr>
+<td>six</td>
+<td>1.17.0</td>
+<td>Python 2/3 compatibility.</td>
+</tr>
+<tr>
+<td>python-dateutil</td>
+<td>2.9.0.post0</td>
+<td>Date parsing utilities.</td>
+</tr>
+<tr>
+<td>Pygments</td>
+<td>2.19.2</td>
+<td>Syntax highlighting.</td>
+</tr>
+<tr>
+<td>PyJWT</td>
+<td>2.10.1</td>
+<td>JSON Web Token library.</td>
+</tr>
+<tr>
+<td>packaging</td>
+<td>25.0</td>
+<td>Package version parsing.</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="installation-command">✅ Installation Command<a class="headerlink" href="#installation-command" title="Permanent link">¶</a></h2>
+<p>To install all dependencies, run:</p>
+<p>```bash
+pip install -r requirements.txt</p></div>
+</div>
+</div>
+<footer class="col-md-12">
+<hr/>
+<p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+</footer>
+<script src="../js/bootstrap.bundle.min.js"></script>
+<script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+<script src="../js/base.js"></script>
+<script src="../search/main.js"></script>
+<div aria-hidden="true" aria-labelledby="searchModalLabel" class="modal" id="mkdocs_search_modal" role="dialog" tabindex="-1">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title" id="searchModalLabel">Search</h4>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<p>From here you can search these documents. Enter your search terms below.</p>
+<form>
+<div class="form-group">
+<input class="form-control" id="mkdocs-search-query" placeholder="Search..." title="Type search term here" type="search"/>
+</div>
+</form>
+<div data-no-results-text="No results found" id="mkdocs-search-results"></div>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div><div aria-hidden="true" aria-labelledby="keyboardModalLabel" class="modal" id="mkdocs_keyboard_modal" role="dialog" tabindex="-1">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<table class="table">
+<thead>
+<tr>
+<th style="width: 20%;">Keys</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="help shortcut"><kbd>?</kbd></td>
+<td>Open this help</td>
+</tr>
+<tr>
+<td class="next shortcut"><kbd>n</kbd></td>
+<td>Next page</td>
+</tr>
+<tr>
+<td class="prev shortcut"><kbd>p</kbd></td>
+<td>Previous page</td>
+</tr>
+<tr>
+<td class="search shortcut"><kbd>s</kbd></td>
+<td>Search</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

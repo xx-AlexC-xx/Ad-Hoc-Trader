@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html data-bs-theme="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>Data Fetcher - AdHoc_Trader</title>
+<link href="../../../css/bootstrap.min.css" rel="stylesheet"/>
+<link href="../../../css/fontawesome.min.css" rel="stylesheet"/>
+<link href="../../../css/brands.min.css" rel="stylesheet"/>
+<link href="../../../css/solid.min.css" rel="stylesheet"/>
+<link href="../../../css/v4-font-face.min.css" rel="stylesheet"/>
+<link href="../../../css/base.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" id="hljs-light" rel="stylesheet"/>
+<link disabled="" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" id="hljs-dark" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body>
+<div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+<div class="container">
+<a class="navbar-brand" href="../../../index.html">AdHoc_Trader</a>
+<!-- Expander button -->
+<button aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar-collapse" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<!-- Expanded navigation -->
+<div class="navbar-collapse collapse" id="navbar-collapse">
+<!-- Main navigation -->
+<ul class="nav navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="../../../index.html">Home</a>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Project Configs</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../../index.html.html">index.html</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../deno.json.html">Deno.Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../component.json.html">Component.json</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../eslint.config.html">ESLint Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../import_map.html">Import Map</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../package.html">Package</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../package-lock.html">Package-lock</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../postcss.config.html">PostCSS Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../tailwind.config.ts.html">Tailwind Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../tailwind.config.js.html">Tailwind Config JS</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../tsconfig.node.html">TS Config Node</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../vite-env.d.ts.html">Vite Env Types</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../../vite.config.html">Vite Config</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Dependencies</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../../dependencies/dependencies.html">Dependencies</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">VSCode</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../../VSCode/settings.json.html">VSCode Settings</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-current="page" aria-expanded="false" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button">ML Pipeline</a>
+<ul class="dropdown-menu">
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">Historical Ingestion</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../historical_ingestion/alpha_vantage_client.html">Alpha Vantage Client</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../historical_ingestion/config.py.html">Config</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../historical_ingestion/ingest_historical.html">Ingestion Historical</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../historical_ingestion/run_pipeline.html">Run Pipeline</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../historical_ingestion/supabase_client.html">Supabase Client</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../historical_ingestion/utils.html">Utils</a>
+</li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">Source</a>
+<ul class="dropdown-menu">
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">DL</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../dl/lstm_model.html">LSTM Model</a>
+</li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">ML</a>
+<ul class="dropdown-menu">
+<li>
+<a aria-current="page" class="dropdown-item active" href="data_fetcher.html">Data Fetcher</a>
+</li>
+<li>
+<a class="dropdown-item" href="feature_engineer.html">Feature Engineering</a>
+</li>
+<li>
+<a class="dropdown-item" href="predictor.html">Predictor</a>
+</li>
+<li>
+<a class="dropdown-item" href="supabase_uploader.html">Supabase Uploader</a>
+</li>
+<li>
+<a class="dropdown-item" href="train_model.html">Training Model</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a class="dropdown-item" href="#">Tests</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../test/test_normalization.html">Test Normalization</a>
+</li>
+</ul>
+</li>
+<li>
+<a class="dropdown-item" href="../../requirements.html">Requirements</a>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="nav navbar-nav ms-md-auto">
+<li class="nav-item">
+<a class="nav-link" data-bs-target="#mkdocs_search_modal" data-bs-toggle="modal" href="#">
+<i class="fa fa-search"></i> Search
+                            </a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="../dl/lstm_model.html" rel="prev">
+<i class="fa fa-arrow-left"></i> Previous
+                                </a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="feature_engineer.html" rel="next">
+                                    Next <i class="fa fa-arrow-right"></i>
+</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="container">
+<div class="row">
+<div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+<div class="navbar-header">
+<button class="navbar-toggler collapsed" data-bs-target="#toc-collapse" data-bs-toggle="collapse" title="Table of Contents" type="button">
+<span class="fa fa-angle-down"></span>
+</button>
+</div>
+<div class="navbar-collapse collapse card bg-body-tertiary" id="toc-collapse">
+<ul class="nav flex-column">
+<li class="nav-item" data-bs-level="1"><a class="nav-link" href="#data_fetcherpy">📊 data_fetcher.py</a>
+<ul class="nav flex-column">
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#location">📁 Location</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#process-flow">Process Flow</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div></div>
+<div class="col-md-9" role="main">
+<p>ml_pipeline/src/ml/data_fetcher.md
+markdown</p>
+<h1 id="data_fetcherpy">📊 <code>data_fetcher.py</code><a class="headerlink" href="#data_fetcherpy" title="Permanent link">¶</a></h1>
+<p>This module fetches <strong>intraday stock price data</strong> from the <a href="https://www.alphavantage.co/documentation/">Alpha Vantage API</a> and uploads it to Supabase. It also prints the latest 5 rows of data for validation.</p>
+<hr/>
+<h2 id="location">📁 Location<a class="headerlink" href="#location" title="Permanent link">¶</a></h2>
+<p>src/ml/data_fetcher.py</p>
+<p><em>Run via:</em></p>
+<pre><code class="language-bash">python -m src.ml.data_fetcher
+
+---
+## 📈 Process Flow
+
+
+</code></pre>
+<hr/>
+<h2 id="process-flow">Process Flow<a class="headerlink" href="#process-flow" title="Permanent link">¶</a></h2>
+<hr/>
+<div class="mermaid">flowchart TD
+  A[Start] --&gt; B[Load ALPHA_VANTAGE_KEY from .env]
+  B --&gt; C[Make HTTP request to Alpha Vantage API]
+  C --&gt; D[Parse JSON response]
+  D --&gt; E[Convert to DataFrame]
+  E --&gt; F[Clean and sort data]
+  F --&gt; G[Upload to Supabase]
+  G --&gt; H[Print last 5 rows]
+</div>
+<hr/>
+<p>Function: fetch_stock_data(...)</p>
+<p>Fetches intraday time series stock data for a given symbol and returns it as a pandas DataFrame.</p>
+<p><strong>Parameters</strong>
+ticker (str): Stock symbol to query (e.g. "AAPL").</p>
+<p><strong>interval</strong> (str, default: "60min"):
+Time interval for intraday data. Options: "1min", "5min", "15min", "30min", "60min".</p>
+<p><strong>outputsize</strong> (str, default: "compact"):
+"compact" = last 100 data points, "full" = entire history.</p>
+<p><strong>Returns</strong>
+pd.DataFrame: Cleaned, chronologically sorted stock price data with columns:</p>
+<p><strong>open, high, low, close, volume</strong></p>
+<p>If the API call fails or the data is invalid, returns an empty DataFrame.</p>
+<p>📦 <strong>Dependencies</strong>
+pandas
+requests
+python-dotenv
+Local module: supabase_uploader.upload_to_supabase()</p>
+<p><strong>Environment Variables</strong>
+These must be defined in a <strong>.env</strong> file at the project root:
+ALPHA_VANTAGE_KEY: Your Alpha Vantage API key.</p>
+<p><strong>Main Script Behavior</strong>
+When run directly (e.g., via CLI):
+    $ python -m src.ml.data_fetcher</p>
+<p>It will:
+Fetch 60min intraday data for "AAPL"
+Upload the result to Supabase
+Print the last 5 rows of the resulting DataFrame</p>
+<p>⚠️ Error Handling
+Gracefully handles and logs:
+❌ Missing API key
+❌ HTTP/network failures
+❌ Malformed or unexpected API responses
+📤 Example Usage</p>
+<p>$ python -m src.ml.data_fetcher
+📡 Fetching data for AAPL...
+✅ 100 rows fetched for AAPL</p>
+<pre><code>open   high    low  close   volume
+...    ...     ...   ...     ...
+</code></pre>
+<p>🧩 Related Files
+supabase_uploader.py: Handles uploading the DataFrame to Supabase.
+.env: Must contain your ALPHA_VANTAGE_KEY.</p>
+<p>✅ <strong>Notes</strong>
+Alpha Vantage free tier limits: 5 API calls per minute, 500 per day.</p>
+<p>Best used in automated data pipelines or on-demand analysis.</p>
+<hr/></div>
+</div>
+</div>
+<footer class="col-md-12">
+<hr/>
+<p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+</footer>
+<script src="../../../js/bootstrap.bundle.min.js"></script>
+<script>
+            var base_url = "../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+<script src="../../../js/base.js"></script>
+<script src="../../../search/main.js"></script>
+<div aria-hidden="true" aria-labelledby="searchModalLabel" class="modal" id="mkdocs_search_modal" role="dialog" tabindex="-1">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title" id="searchModalLabel">Search</h4>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<p>From here you can search these documents. Enter your search terms below.</p>
+<form>
+<div class="form-group">
+<input class="form-control" id="mkdocs-search-query" placeholder="Search..." title="Type search term here" type="search"/>
+</div>
+</form>
+<div data-no-results-text="No results found" id="mkdocs-search-results"></div>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div><div aria-hidden="true" aria-labelledby="keyboardModalLabel" class="modal" id="mkdocs_keyboard_modal" role="dialog" tabindex="-1">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<table class="table">
+<thead>
+<tr>
+<th style="width: 20%;">Keys</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="help shortcut"><kbd>?</kbd></td>
+<td>Open this help</td>
+</tr>
+<tr>
+<td class="next shortcut"><kbd>n</kbd></td>
+<td>Next page</td>
+</tr>
+<tr>
+<td class="prev shortcut"><kbd>p</kbd></td>
+<td>Previous page</td>
+</tr>
+<tr>
+<td class="search shortcut"><kbd>s</kbd></td>
+<td>Search</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
+mermaid.initialize({});</script></body>
+</html>

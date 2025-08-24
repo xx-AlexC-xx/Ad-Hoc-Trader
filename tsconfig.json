@@ -5,15 +5,26 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "noImplicitAny": false,
-    "noUnusedParameters": false,
+    "target": "ES2022",
+    "module": "ESNext",
+    "strict": true,
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
     "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
     "allowJs": true,
     "noUnusedLocals": false,
-    "strictNullChecks": false
+    "noUnusedParameters": false,
+    "strictNullChecks": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": true,
+    "outDir": ".",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    }
   }
 }

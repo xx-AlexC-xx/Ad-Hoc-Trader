@@ -1,127 +1,135 @@
-import * as React from "react"
-import * as ToastPrimitives from "@radix-ui/react-toast"
-import { cva, type VariantProps } from "class-variance-authority"
-import { X } from "lucide-react"
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
+import { toast as baseToast } from '@/components/ui/useToast';
 
-import { cn } from "@/lib/utils"
-
-const ToastProvider = ToastPrimitives.Provider
-
-const ToastViewport = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Viewport>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Viewport
-    ref={ref}
-    className={cn(
-      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
-      className
-    )}
-    {...props}
-  />
-))
-ToastViewport.displayName = ToastPrimitives.Viewport.displayName
-
-const toastVariants = cva(
-  "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
-  {
-    variants: {
-      variant: {
-        default: "border bg-background text-foreground",
-        destructive:
-          "destructive group border-destructive bg-destructive text-destructive-foreground",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  }
-)
-
-const Toast = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
-    VariantProps<typeof toastVariants>
->(({ className, variant, ...props }, ref) => {
-  return (
-    <ToastPrimitives.Root
-      ref={ref}
-      className={cn(toastVariants({ variant }), className)}
-      {...props}
-    />
-  )
-})
-Toast.displayName = ToastPrimitives.Root.displayName
-
-const ToastAction = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Action>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Action>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Action
-    ref={ref}
-    className={cn(
-      "inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive",
-      className
-    )}
-    {...props}
-  />
-))
-ToastAction.displayName = ToastPrimitives.Action.displayName
-
-const ToastClose = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Close>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Close>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Close
-    ref={ref}
-    className={cn(
-      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
-      className
-    )}
-    toast-close=""
-    {...props}
-  >
-    <X className="h-4 w-4" />
-  </ToastPrimitives.Close>
-))
-ToastClose.displayName = ToastPrimitives.Close.displayName
-
-const ToastTitle = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Title>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Title
-    ref={ref}
-    className={cn("text-sm font-semibold", className)}
-    {...props}
-  />
-))
-ToastTitle.displayName = ToastPrimitives.Title.displayName
-
-const ToastDescription = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Description>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Description
-    ref={ref}
-    className={cn("text-sm opacity-90", className)}
-    {...props}
-  />
-))
-ToastDescription.displayName = ToastPrimitives.Description.displayName
-
-type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>
-
-type ToastActionElement = React.ReactElement<typeof ToastAction>
-
-export {
-  type ToastProps,
-  type ToastActionElement,
-  ToastProvider,
-  ToastViewport,
-  Toast,
-  ToastTitle,
-  ToastDescription,
-  ToastClose,
-  ToastAction,
+// Create a typed wrapper around the existing toast function
+type ToastOptions = Parameters<typeof baseToast>[0];
+interface ExtendedToastOptions extends ToastOptions {
+  variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
 }
+const toast = (options: ExtendedToastOptions) => baseToast(options);
+
+interface Trade {
+  id: string;
+  symbol: string;
+  strike_price?: number;
+  entry_price: number;
+  exit_price?: number;
+  stop_loss?: number;
+  expiration?: string;
+  risk_reward_ratio?: string;
+  projected_gain?: number;
+  category?: string;
+  status: 'pending' | 'active' | 'closed';
+  current_price?: number;
+  pnl?: number;
+  entry_time?: string;
+  exit_time?: string;
+  exit_reason?: 'target' | 'stop-loss' | 'expiration';
+  created_at?: string;
+  updated_at?: string;
+}
+
+export const useTradeDatabase = () => {
+  const [trades, setTrades] = useState<Trade[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const saveTrade = async (trade: Omit<Trade, 'id' | 'created_at' | 'updated_at'>) => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('trades')
+        .insert([{
+          symbol: trade.symbol,
+          strike_price: trade.strike_price,
+          entry_price: trade.entry_price,
+          exit_price: trade.exit_price,
+          stop_loss: trade.stop_loss,
+          expiration: trade.expiration,
+          risk_reward_ratio: trade.risk_reward_ratio,
+          projected_gain: trade.projected_gain,
+          category: trade.category,
+          status: trade.status,
+          current_price: trade.current_price,
+          pnl: trade.pnl,
+          entry_time: trade.entry_time,
+          exit_time: trade.exit_time,
+          exit_reason: trade.exit_reason
+        }])
+        .select();
+
+      if (error) throw error;
+      
+      toast({
+        title: "Trade Saved",
+        description: `Trade for ${trade.symbol} saved to database`,
+      });
+      
+      return data?.[0];
+    } catch (error) {
+      console.error('Error saving trade:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save trade to database",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateTrade = async (id: string, updates: Partial<Trade>) => {
+    try {
+      setLoading(true);
+      const { error } = await supabase
+        .from('trades')
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', id);
+
+      if (error) throw error;
+      
+      await fetchTrades();
+    } catch (error) {
+      console.error('Error updating trade:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update trade",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchTrades = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('trades')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setTrades(data || []);
+    } catch (error) {
+      console.error('Error fetching trades:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTrades();
+  }, []);
+
+  return {
+    trades,
+    loading,
+    saveTrade,
+    updateTrade,
+    fetchTrades
+  };
+};

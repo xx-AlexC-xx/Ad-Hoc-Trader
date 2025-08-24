@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["deno.ns", "deno.unstable", "dom"]
+  },
+  "importMap": "./import_map.json",
+  "lint": true,
+  "fmt": true,
+  "tasks": {
+    "dev": "deno run --allow-net --allow-env --watch src/backend/main.ts",
+    "check": "deno check src/backend/main.ts",
+    "lint": "deno lint",
+    "fmt": "deno fmt"
+  }
+}

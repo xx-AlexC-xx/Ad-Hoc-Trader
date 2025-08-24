@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/useToast';
 import { supabase } from '@/lib/supabase';
+import { useUser } from '@supabase/auth-helpers-react';
+import type { User } from '@supabase/supabase-js';
 
 interface Trade {
   id: string;
@@ -18,8 +20,8 @@ interface Trade {
   currentPrice?: number;
   pnl?: number;
   entryTime?: string;
-  exitTime?: string;
-  exitReason?: 'target' | 'stop-loss' | 'expiration';
+  exit_time?: string;
+  exitReason?: 'target' | 'stop-loss' | 'expiration' | 'manual';
 }
 
 interface AppContextType {
@@ -31,6 +33,7 @@ interface AppContextType {
   getTradeById: (id: string) => Trade | undefined;
   closeTrade: (id: string) => void;
   cancelTrade: (id: string) => void;
+  user: User | null;
 }
 
 const defaultAppContext: AppContextType = {
@@ -42,17 +45,23 @@ const defaultAppContext: AppContextType = {
   getTradeById: () => undefined,
   closeTrade: () => {},
   cancelTrade: () => {},
+  user: null,
 };
 
 const AppContext = createContext<AppContextType>(defaultAppContext);
-
 export const useAppContext = () => useContext(AppContext);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTrades, setActiveTrades] = useState<Trade[]>([]);
+  const [user, setUser] = useState<User | null>(null);
 
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
+  const supaUser = useUser();
+
+  useEffect(() => {
+    setUser(supaUser ?? null);
+  }, [supaUser]);
 
   const saveTrade = async (trade: any) => {
     try {
@@ -70,7 +79,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         current_price: trade.currentPrice,
         pnl: trade.pnl,
         entry_time: trade.entryTime,
-        exit_time: trade.exitTime,
+        exit_time: trade.exit_time,
         exit_reason: trade.exitReason
       }]);
     } catch (error) {
@@ -85,10 +94,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       status: 'pending' as const,
       currentPrice: trade.entryPrice
     }));
-    
+
     setActiveTrades(prev => [...prev, ...tradesWithId]);
     tradesWithId.forEach(saveTrade);
-    
+
     toast({
       title: "Trades Added",
       description: `${newTrades.length} trade(s) added and saved to database`,
@@ -110,7 +119,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const trade = activeTrades.find(t => t.id === id);
     if (trade) {
       updateTradeStatus(id, 'closed', {
-        exitTime: new Date().toISOString(),
+        exit_time: new Date().toISOString(),
         exitReason: 'manual'
       });
       toast({
@@ -130,17 +139,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const getTradeById = (id: string) => activeTrades.find(trade => trade.id === id);
 
+  // Mock price updates and auto-close logic
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveTrades(prev => prev.map(trade => {
         if (trade.status === 'closed') return trade;
-        
+
         const volatility = 0.02;
         const change = (Math.random() - 0.5) * volatility;
         const newPrice = (trade.currentPrice || trade.entryPrice) * (1 + change);
-        
+
         let updatedTrade = { ...trade, currentPrice: newPrice };
-        
+
         if (trade.status === 'pending') {
           if (Math.abs(newPrice - trade.entryPrice) / trade.entryPrice < 0.01) {
             updatedTrade.status = 'active';
@@ -152,10 +162,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           }
         } else if (trade.status === 'active') {
           updatedTrade.pnl = ((newPrice - trade.entryPrice) / trade.entryPrice) * 100;
-          
+
           if (newPrice >= trade.exitPrice) {
             updatedTrade.status = 'closed';
-            updatedTrade.exitTime = new Date().toISOString();
+            updatedTrade.exit_time = new Date().toISOString();
             updatedTrade.exitReason = 'target';
             toast({
               title: "Trade Closed - Target Hit",
@@ -163,7 +173,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             });
           } else if (newPrice <= trade.stopLoss) {
             updatedTrade.status = 'closed';
-            updatedTrade.exitTime = new Date().toISOString();
+            updatedTrade.exit_time = new Date().toISOString();
             updatedTrade.exitReason = 'stop-loss';
             toast({
               title: "Trade Closed - Stop Loss",
@@ -171,7 +181,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             });
           }
         }
-        
+
         if (updatedTrade !== trade) saveTrade(updatedTrade);
         return updatedTrade;
       }));
@@ -191,6 +201,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         getTradeById,
         closeTrade,
         cancelTrade,
+        user
       }}
     >
       {children}

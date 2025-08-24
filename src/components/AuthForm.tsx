@@ -50,6 +50,7 @@ export default function AuthForm() {
           email, 
           password 
         })
+        console.log("🧪 Email/Password:", email, password);
         if (error) {
           setMessage(error.message)
         } else if (data.user) {

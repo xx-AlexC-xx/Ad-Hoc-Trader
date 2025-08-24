@@ -1,0 +1,60 @@
+site_name: AdHoc_Trader
+
+plugins:
+  - search
+  - mermaid2
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+
+
+nav:
+  - Home: index.md
+
+  - Project Configs:
+      - index.html: index.html.md
+      - Deno.Config: deno.json.md
+      - Component.json: component.json.md
+      - ESLint Config: eslint.config.md
+      - Import Map: import_map.md
+      - Package: package.md
+      - Package-lock: package-lock.md
+      - PostCSS Config: postcss.config.md
+      - Tailwind Config: tailwind.config.ts.md
+      - Tailwind Config JS: tailwind.config.js.md
+      - TS Config Node: tsconfig.node.md
+      - Vite Env Types: vite-env.d.ts.md
+      - Vite Config: vite.config.md
+
+  - Dependencies:
+    - Dependencies: dependencies/dependencies.md
+
+
+  - VSCode:
+     - VSCode Settings: VSCode/settings.json.md
+
+  - ML Pipeline:
+    #- Env File: ml_pipeline/.env.md
+    - Historical Ingestion:
+        - Alpha Vantage Client: ml_pipeline/historical_ingestion/alpha_vantage_client.md
+        - Config: ml_pipeline/historical_ingestion/config.py.md
+        - Ingestion Historical: ml_pipeline/historical_ingestion/ingest_historical.md
+        - Run Pipeline: ml_pipeline/historical_ingestion/run_pipeline.md
+        - Supabase Client: ml_pipeline/historical_ingestion/supabase_client.md
+        - Utils: ml_pipeline/historical_ingestion/utils.md
+    - Source:
+        - DL:
+            - LSTM Model: ml_pipeline/src/dl/lstm_model.md
+        - ML:
+            - Data Fetcher: ml_pipeline/src/ml/data_fetcher.md
+            - Feature Engineering: ml_pipeline/src/ml/feature_engineer.md
+            - Predictor: ml_pipeline/src/ml/predictor.md
+            - Supabase Uploader: ml_pipeline/src/ml/supabase_uploader.md
+            - Training Model: ml_pipeline/src/ml/train_model.md
+    - Tests:
+        - Test Normalization: ml_pipeline/test/test_normalization.md
+    
+    - Requirements: ml_pipeline/requirements.md
+

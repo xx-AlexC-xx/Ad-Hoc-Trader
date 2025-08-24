@@ -1,0 +1,54 @@
+{
+  "python.terminal.activateEnvironment": true,
+  "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/ml_pipeline"
+  ],
+  "terminal.integrated.env.windows": {
+    "PYTHONPATH": "${workspaceFolder}/ml_pipeline"
+  },
+  "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.autoImportCompletions": true,
+  "python.envFile": "${workspaceFolder}/.env",
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.lintOnSave": true,
+  "python.linting.pylintPath": "${workspaceFolder}/venv/Scripts/pylint.exe",
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell",
+      "args": [
+        "-NoExit",
+        "-Command",
+        "& '${workspaceFolder}\\venv\\Scripts\\Activate.ps1'"
+      ]
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "editor.defaultFormatter": "ms-python.black-formatter",
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
+  "diffEditor.codeLens": true,
+  "workbench.settings.useSplitJSON": true,
+  "workbench.editor.enablePreview": false,
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "typescript.tsconfig": "tsconfig.json",
+  "deno.enable": true,
+  "deno.enablePaths": [
+    "src/backend",
+    "supabase/functions"
+  ],
+  "deno.disablePaths": [
+    "src/components",
+    "src/lib",
+    "src/hooks",
+    "pages",
+    "public"
+  ],
+  "deno.lint": true,
+  "deno.unstable": true,
+  "deno.importMap": "src/backend/tasks/import_map.json",
+  "deno.workspaceFolders": ["src/backend/tasks"],
+  "deno.config": "./deno.json"
+}

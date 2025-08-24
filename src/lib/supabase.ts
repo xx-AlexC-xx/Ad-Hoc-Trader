@@ -1,17 +1,36 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase client
-// Using direct values from project configuration
-const supabaseUrl = 'https://qhmgxmalxffllarmlqjn.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFobWd4bWFseGZmbGxhcm1scWpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkyMDk2MzAsImV4cCI6MjA2NDc4NTYzMH0.CUCYQUjKxj5I3smd29ArZT6RfrngNEHNIp9c_7-65i4';
+// Access Vite environment variables
+const supabaseUrl: string = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey: string = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-const supabase = createClient(supabaseUrl, supabaseKey, {
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('Supabase URL and Key must be provided.');
+}
+
+// Initialize Supabase client
+export const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,
-    flowType: 'pkce'
-  }
+    flowType: 'pkce',
+  },
 });
 
-export { supabase };
+// Optional helper to fetch outdated symbols
+export const fetchOutdatedSymbols = async () => {
+  const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+
+  const { data, error } = await supabase
+    .from('symbols')
+    .select('*')
+    .or(`last_fetched_at.is.null,last_fetched_at.lt.${twoDaysAgo}`);
+
+  if (error) {
+    console.error('Error fetching symbols:', error.message);
+    return [];
+  }
+
+  return data;
+};

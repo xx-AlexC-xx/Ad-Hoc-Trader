@@ -12,6 +12,7 @@ import Header from "./components/Header";
 import SMTPSetupGuide from "./components/SMTPSetupGuide";
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { SessionContextProvider } from "@supabase/auth-helpers-react";
 
 const queryClient = new QueryClient();
 
@@ -31,35 +32,37 @@ function App() {
     <ThemeProvider defaultTheme="dark">
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <AppProvider>
-            <Toaster />
-            <Sonner />
-            <Router>
-              <Routes>
-                <Route path="/login" element={<AuthForm />} />
-                <Route path="/smtp-setup" element={<SMTPSetupGuide />} />
-                <Route
-                  path="/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <Header />
-                      <Dashboard />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/"
-                  element={
-                    <ProtectedRoute>
-                      <Header />
-                      <Dashboard />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route path="*" element={<AuthForm />} />
-              </Routes>
-            </Router>
-          </AppProvider>
+          <SessionContextProvider supabaseClient={supabase}>
+            <AppProvider>
+              <Toaster />
+              <Sonner />
+              <Router>
+                <Routes>
+                  <Route path="/login" element={<AuthForm />} />
+                  <Route path="/smtp-setup" element={<SMTPSetupGuide />} />
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <Header />
+                        <Dashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/"
+                    element={
+                      <ProtectedRoute>
+                        <Header />
+                        <Dashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route path="*" element={<AuthForm />} />
+                </Routes>
+              </Router>
+            </AppProvider>
+          </SessionContextProvider>
         </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>
