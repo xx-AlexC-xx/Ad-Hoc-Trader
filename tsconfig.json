@@ -8,7 +8,7 @@
     "target": "ES2022",
     "module": "ESNext",
     "strict": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -25,6 +25,7 @@
     "baseUrl": "src",
     "paths": {
       "@/*": ["*"]
-    }
+    },
+    "jsx": "react-jsx"
   }
 }

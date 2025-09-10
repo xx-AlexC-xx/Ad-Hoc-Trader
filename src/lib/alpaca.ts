@@ -170,3 +170,29 @@ export const getAlpacaClosedTrades = async (apiKey: string, secretKey: string) =
     return [];
   }
 };
+
+// --- Get Alpaca Recent Orders ---
+export const getAlpacaOrders = async (
+  apiKey: string,
+  secretKey: string,
+  status: 'open' | 'closed' | 'all' = 'all',
+  limit: number = 20
+) => {
+  try {
+    const url = `https://paper-api.alpaca.markets/v2/orders?status=${status}&limit=${limit}&nested=true`;
+
+    const res = await fetch(url, {
+      headers: {
+        "APCA-API-KEY-ID": apiKey,
+        "APCA-API-SECRET-KEY": secretKey,
+      },
+    });
+
+    if (!res.ok) throw new Error(`Failed to fetch orders: ${res.statusText}`);
+
+    return await res.json();
+  } catch (err) {
+    console.error("❌ Error fetching Alpaca orders:", err);
+    return [];
+  }
+};

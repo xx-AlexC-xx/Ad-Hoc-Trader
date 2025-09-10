@@ -14,6 +14,7 @@
   "python.linting.pylintEnabled": true,
   "python.linting.lintOnSave": true,
   "python.linting.pylintPath": "${workspaceFolder}/venv/Scripts/pylint.exe",
+
   "terminal.integrated.profiles.windows": {
     "PowerShell": {
       "source": "PowerShell",
@@ -26,29 +27,37 @@
     }
   },
   "terminal.integrated.defaultProfile.windows": "PowerShell",
-  "editor.defaultFormatter": "ms-python.black-formatter",
+
+  // Editor
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.minimap.enabled": false,
   "diffEditor.codeLens": true,
   "workbench.settings.useSplitJSON": true,
   "workbench.editor.enablePreview": false,
+
+  // TypeScript
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "typescript.tsconfig": "tsconfig.json",
+
+  // Deno — only used for backend (List of Symbols)
   "deno.enable": true,
-  "deno.enablePaths": [
-    "src/backend",
-    "supabase/functions"
-  ],
-  "deno.disablePaths": [
-    "src/components",
-    "src/lib",
-    "src/hooks",
-    "pages",
-    "public"
-  ],
+  "deno.enablePaths":[
+    "supabase/functions",
+    "src/backend/tasks" 
+   ],
   "deno.lint": true,
   "deno.unstable": true,
-  "deno.importMap": "src/backend/tasks/import_map.json",
-  "deno.workspaceFolders": ["src/backend/tasks"],
-  "deno.config": "./deno.json"
+  "deno.suggest.imports.hosts": {
+    "https://deno.land": true,
+    "npm:": true,
+    "https://deno.land/x/": true,
+    "https://cdn.jsdelivr.net/gh/": true,
+    "https://cdn.skypack.dev/": true
+  },
+
+  // Files
+  "files.associations": {
+    "*.json": "json"
+  }
 }

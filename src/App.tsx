@@ -10,18 +10,20 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./components/Dashboard";
 import Header from "./components/Header";
 import SMTPSetupGuide from "./components/SMTPSetupGuide";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 
 const queryClient = new QueryClient();
 
 function App() {
+  const dashboardRef = useRef<any>(null);
+
   useEffect(() => {
     // Debug auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        console.log('Global auth state change:', event, session?.user?.email);
+        console.log("Global auth state change:", event, session?.user?.email);
       }
     );
 
@@ -44,8 +46,8 @@ function App() {
                     path="/dashboard"
                     element={
                       <ProtectedRoute>
-                        <Header />
-                        <Dashboard />
+                        <Header fetchAllData={dashboardRef.current?.fetchAllData} />
+                        <Dashboard ref={dashboardRef} />
                       </ProtectedRoute>
                     }
                   />
@@ -53,8 +55,8 @@ function App() {
                     path="/"
                     element={
                       <ProtectedRoute>
-                        <Header />
-                        <Dashboard />
+                        <Header fetchAllData={dashboardRef.current?.fetchAllData} />
+                        <Dashboard ref={dashboardRef} />
                       </ProtectedRoute>
                     }
                   />

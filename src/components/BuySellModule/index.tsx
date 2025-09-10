@@ -1,3 +1,5 @@
+// src/components/BuySellModule/index.tsx
+
 import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -12,7 +14,7 @@ import {
   getUserAlpacaKeys,
   placeAlpacaOrder,
 } from '@/lib/alpaca';
-import { updateClosedTrades } from '@/lib/updateClosedTrades'; // <-- trade history updater
+import { updateClosedTrades } from '@/lib/updateClosedTrades';
 
 import MarketOrderForm from './MarketOrderForm';
 import LimitOrderForm from './LimitOrderForm';
@@ -26,8 +28,8 @@ import type { OrderSide, OrderType, TimeInForce } from './types';
 
 interface BuySellModuleProps {
   setLastOrderResponse: (data: any) => void;
-  fetchAccountAndPositions: () => Promise<void>; // positions/account refresh
-  fetchSymbols: () => Promise<void>;             // symbol refresh
+  fetchAccountAndPositions: () => Promise<void>;
+  fetchSymbols: () => Promise<void>;
 }
 
 const BuySellModule: React.FC<BuySellModuleProps> = ({
@@ -90,23 +92,35 @@ const BuySellModule: React.FC<BuySellModuleProps> = ({
 
         case 'limit':
           if (!limitPrice) throw new Error('Missing limit price.');
-          response = await placeAlpacaOrder(symbol, qty, side, 'limit', timeInForce, keys.api_key, keys.secret_key, { limit_price: limitPrice });
+          response = await placeAlpacaOrder(
+            symbol, qty, side, 'limit', timeInForce,
+            keys.api_key, keys.secret_key, { limit_price: limitPrice }
+          );
           break;
 
         case 'stop':
           if (!stopPrice) throw new Error('Missing stop price.');
-          response = await placeAlpacaOrder(symbol, qty, side, 'stop', timeInForce, keys.api_key, keys.secret_key, { stop_price: stopPrice });
+          response = await placeAlpacaOrder(
+            symbol, qty, side, 'stop', timeInForce,
+            keys.api_key, keys.secret_key, { stop_price: stopPrice }
+          );
           break;
 
         case 'stop_limit':
           if (!limitPrice || !stopPrice) throw new Error('Missing stop or limit price.');
-          response = await placeAlpacaOrder(symbol, qty, side, 'stop_limit', timeInForce, keys.api_key, keys.secret_key, { stop_price: stopPrice, limit_price: limitPrice });
+          response = await placeAlpacaOrder(
+            symbol, qty, side, 'stop_limit', timeInForce,
+            keys.api_key, keys.secret_key, { stop_price: stopPrice, limit_price: limitPrice }
+          );
           break;
 
         case 'trailing_stop':
           if (!trailValue) throw new Error('Missing trail value.');
           const trailKey = trailType === 'rate' ? 'trail_percent' : 'trail_price';
-          response = await placeAlpacaOrder(symbol, qty, side, 'trailing_stop', timeInForce, keys.api_key, keys.secret_key, { [trailKey]: trailValue });
+          response = await placeAlpacaOrder(
+            symbol, qty, side, 'trailing_stop', timeInForce,
+            keys.api_key, keys.secret_key, { [trailKey]: trailValue }
+          );
           break;
 
         default:
@@ -116,7 +130,6 @@ const BuySellModule: React.FC<BuySellModuleProps> = ({
       console.log('Order placed:', response);
       setLastOrderResponse(response);
 
-      // ---- Bundled post-order refresh ----
       if (user?.id) {
         try {
           await Promise.all([
@@ -127,7 +140,6 @@ const BuySellModule: React.FC<BuySellModuleProps> = ({
           console.error('Post-order refresh failed:', err);
         }
       }
-      // ----------------------------------------
 
       setShowModal(false);
       setSymbol('');
@@ -139,23 +151,6 @@ const BuySellModule: React.FC<BuySellModuleProps> = ({
       setIsPlacingOrder(false);
     }
   };
-  // --------------------------------
-
-  // ---- Header refresh button ----
-  const handleRefresh = async () => {
-    if (!user?.id) return;
-
-    try {
-      await Promise.all([
-        fetchSymbols(),
-        fetchAccountAndPositions(),
-        updateClosedTrades(user.id), // bundled refresh
-      ]);
-    } catch (err) {
-      console.error('Refresh failed:', err);
-    }
-  };
-  // --------------------------------
 
   return (
     <div className="space-y-4 p-4 bg-[#1a1a1a] text-white rounded-lg">
@@ -176,9 +171,6 @@ const BuySellModule: React.FC<BuySellModuleProps> = ({
             Sell
           </Button>
         </div>
-        <Button variant="outline" onClick={handleRefresh}>
-          Refresh
-        </Button>
       </div>
 
       <Label>Symbol</Label>
@@ -209,10 +201,34 @@ const BuySellModule: React.FC<BuySellModuleProps> = ({
       </Select>
 
       {orderType === 'market' && <MarketOrderForm qty={qty} setQty={setQty} />}
-      {orderType === 'limit' && <LimitOrderForm qty={qty} setQty={setQty} limitPrice={limitPrice} setLimitPrice={setLimitPrice} />}
-      {orderType === 'stop' && <StopOrderForm qty={qty} setQty={setQty} stopPrice={stopPrice} setStopPrice={setStopPrice} />}
-      {orderType === 'stop_limit' && <StopLimitOrderForm qty={qty} setQty={setQty} limitPrice={limitPrice} setLimitPrice={setLimitPrice} stopPrice={stopPrice} setStopPrice={setStopPrice} />}
-      {orderType === 'trailing_stop' && <TrailingStopForm qty={qty} setQty={setQty} trailType={trailType} setTrailType={setTrailType} trailValue={trailValue} setTrailValue={setTrailValue} stopPrice={stopPrice} setStopPrice={setStopPrice} price={price} />}
+      {orderType === 'limit' && (
+        <LimitOrderForm
+          qty={qty} setQty={setQty}
+          limitPrice={limitPrice} setLimitPrice={setLimitPrice}
+        />
+      )}
+      {orderType === 'stop' && (
+        <StopOrderForm
+          qty={qty} setQty={setQty}
+          stopPrice={stopPrice} setStopPrice={setStopPrice}
+        />
+      )}
+      {orderType === 'stop_limit' && (
+        <StopLimitOrderForm
+          qty={qty} setQty={setQty}
+          limitPrice={limitPrice} setLimitPrice={setLimitPrice}
+          stopPrice={stopPrice} setStopPrice={setStopPrice}
+        />
+      )}
+      {orderType === 'trailing_stop' && (
+        <TrailingStopForm
+          qty={qty} setQty={setQty}
+          trailType={trailType} setTrailType={setTrailType}
+          trailValue={trailValue} setTrailValue={setTrailValue}
+          stopPrice={stopPrice} setStopPrice={setStopPrice}
+          price={price}
+        />
+      )}
 
       <Label>Time In Force</Label>
       <Select onValueChange={(val) => setTimeInForce(val as TimeInForce)} value={timeInForce}>
@@ -267,4 +283,3 @@ const BuySellModule: React.FC<BuySellModuleProps> = ({
 };
 
 export default BuySellModule;
-  

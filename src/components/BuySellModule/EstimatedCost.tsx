@@ -1,14 +1,19 @@
 import React from 'react';
-import type { EstimatedCostProps } from './types';
+import { EstimatedCostProps } from './types';
+import { Label } from '@/components/ui/label';
 
 const EstimatedCost: React.FC<EstimatedCostProps> = ({ price, qty, side, label }) => {
-  if (!price || !qty) return null;
-
-  const total = price * qty;
+  const total = price !== null ? price * qty : null;
 
   return (
-    <div className="text-sm text-gray-300 mt-2">
-      {label}: <span className="font-semibold text-white">${total.toFixed(2)}</span>
+    <div className="flex flex-col">
+      <Label>{label}</Label>
+      <div className="text-lg font-medium">
+        {total !== null ? `$${total.toFixed(2)}` : '—'}
+      </div>
+      <div className="text-sm text-gray-500">
+        {side === 'buy' ? 'Buying' : 'Selling'} {qty} units
+      </div>
     </div>
   );
 };

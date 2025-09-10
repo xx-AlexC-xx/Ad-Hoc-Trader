@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Header from './Header';
 import Dashboard from './Dashboard';
 import Footer from './Footer';
@@ -18,6 +18,7 @@ interface ExecutedTrade extends TradeSignal {
 
 const AppLayout: React.FC = () => {
   const [executedTrades, setExecutedTrades] = useState<ExecutedTrade[]>([]);
+  const dashboardRef = useRef<any>(null);
 
   const handleTradeExecuted = (trade: TradeSignal) => {
     const executedTrade: ExecutedTrade = {
@@ -29,12 +30,12 @@ const AppLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-950">
-      <Header />
-      
+      <Header fetchAllData={() => dashboardRef.current?.fetchAllData()} />
+
       <main className="max-w-7xl mx-auto p-6">
-        <Dashboard executedTrades={executedTrades} />
+        <Dashboard ref={dashboardRef} executedTrades={executedTrades} />
       </main>
-      
+
       <Footer />
     </div>
   );

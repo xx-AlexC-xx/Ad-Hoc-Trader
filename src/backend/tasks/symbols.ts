@@ -1,10 +1,10 @@
-// src/backend/routes/symbols.ts
-import express from 'express';
-import { runUpdateSymbols } from '../tasks/updateSymbols';
+// src/backend/task/symbols.ts
+import express, { Request, Response } from "npm:express";
+import { runUpdateSymbols } from "../tasks/updateSymbols.ts";
 
 const router = express.Router();
 
-router.post('/run-symbol-update', async (req, res) => {
+router.post("/run-symbol-update", async (_req: Request, res: Response) => {
   try {
     const result = await runUpdateSymbols();
     res.status(200).json({ success: true, data: result });

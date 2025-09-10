@@ -1,11 +1,16 @@
 {
   "compilerOptions": {
     "strict": true,
-    "lib": ["deno.ns", "deno.unstable", "dom"]
+    "lib": ["deno.ns", "deno.unstable", "dom"], 
+    "types": ["deno.ns", "deno.unstable"]
   },
-  "importMap": "./import_map.json",
-  "lint": true,
-  "fmt": true,
+  "nodeModulesDir": "auto",
+  "imports": {
+    "express": "npm:express@4",
+    "node-fetch": "npm:node-fetch@3"
+  },
+  "lint": {},
+  "fmt": {},
   "tasks": {
     "dev": "deno run --allow-net --allow-env --watch src/backend/main.ts",
     "check": "deno check src/backend/main.ts",

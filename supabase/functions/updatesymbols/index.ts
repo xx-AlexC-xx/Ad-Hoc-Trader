@@ -6,6 +6,19 @@
 import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.5";
 
+type SymbolRecord = {
+  symbol: string;
+  name: string;
+  exchange: string;
+  status: string;
+  tradable: boolean;
+  marginable: boolean;
+  shortable: boolean;
+  easy_to_borrow: boolean;
+  fractionable: boolean;
+  updated_at: string;
+};
+
 serve(async (_req: Request) => {
   console.log("🟢 Starting updatesymbols function with batching...");
 
@@ -41,7 +54,7 @@ serve(async (_req: Request) => {
       (item: any) => item.status === "active" && item.tradable === true
     );
 
-    const mapped = filtered.map((item: any) => ({
+    const mapped: SymbolRecord[] = filtered.map((item: any) => ({
       symbol: item.symbol,
       name: item.name,
       exchange: item.exchange,
@@ -58,7 +71,7 @@ serve(async (_req: Request) => {
 
     // 🧩 Break into chunks of 1000
     const chunkSize = 1000;
-    const chunks = [];
+    const chunks: SymbolRecord[][] = [];
     for (let i = 0; i < mapped.length; i += chunkSize) {
       chunks.push(mapped.slice(i, i + chunkSize));
     }

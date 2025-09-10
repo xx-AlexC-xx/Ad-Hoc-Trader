@@ -4,9 +4,13 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import LogoutButton from './LogoutButton';
 import { useTheme } from 'next-themes';
-import { Button } from '@/components/ui/button'; // Ensure this import exists
+import { Button } from '@/components/ui/button';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  fetchAllData: () => Promise<void>; // new prop for refresh
+}
+
+const Header: React.FC<HeaderProps> = ({ fetchAllData }) => {
   const [user, setUser] = useState<any>(null);
   const { theme, setTheme } = useTheme();
 
@@ -42,16 +46,16 @@ const Header: React.FC = () => {
 
         {/* Right: User Info, Theme Toggle, Refresh */}
         <div className="flex items-center space-x-4">
-          {/* 🔁 Refresh Button */}
+          {/* 🔁 Smart Refresh Button */}
           <Button
             variant="ghost"
-            onClick={() => window.location.reload()}
+            onClick={fetchAllData}
             className="text-white hover:bg-gray-800"
           >
             🔄 Refresh
           </Button>
 
-            {/* 👤 User Info + Logout */}
+          {/* 👤 User Info + Logout */}
           {user && (
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-300">
