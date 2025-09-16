@@ -25,4 +25,4 @@ dist-ssr
 ml_pipeline/src/.env
 /src/backend/.env
 /src/lib/.env
-.env
+/.env
