@@ -17,6 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { supabase } from "@/lib/supabase";
+import { runSyncOrders } from "@/backend/tasks/syncOrders"; // ✅ added import
 
 interface Order {
   alpaca_order_id: string;
@@ -40,8 +41,21 @@ export const RecentOrders: React.FC<RecentOrdersProps> = ({ userId }) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    console.log("📌 [RecentOrders] component mounted with userId:", userId);
+
+    const syncAndFetchOrders = async () => {
       setLoading(true);
+
+      try {
+        console.log("🔄 [RecentOrders] Running runSyncOrders for userId:", userId);
+        await runSyncOrders(userId);
+        console.log("✅ [RecentOrders] runSyncOrders completed");
+      } catch (err) {
+        console.error("❌ [RecentOrders] Failed to sync orders before fetching:", err);
+      }
+
+      console.log("📥 [RecentOrders] Fetching orders from Supabase for userId:", userId);
+
       const { data, error } = await supabase
         .from("orders")
         .select(
@@ -52,15 +66,18 @@ export const RecentOrders: React.FC<RecentOrdersProps> = ({ userId }) => {
         .limit(10);
 
       if (error) {
-        console.error("❌ Error fetching orders:", error);
+        console.error("❌ [RecentOrders] Error fetching orders:", error);
         setOrders([]);
       } else {
+        console.log("✅ [RecentOrders] Orders fetched successfully:", data);
         setOrders(data as Order[]);
       }
+
       setLoading(false);
+      console.log("🏁 [RecentOrders] Finished sync + fetch cycle");
     };
 
-    fetchOrders();
+    syncAndFetchOrders();
   }, [userId]);
 
   const formatDate = (dateStr: string | null) => {

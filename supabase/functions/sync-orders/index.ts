@@ -16,12 +16,17 @@ const ALPACA_BASE = Deno.env.get("ALPACA_BASE_URL") || "https://paper-api.alpaca
 
 serve(async (req) => {
   try {
+    console.log("🔄 [sync-orders] Function invoked");
+
     const payload = await req.json().catch(() => ({}));
     const userId = (payload as Record<string, unknown>)?.userId as string | null;
 
     if (!userId) {
+      console.error("❌ [sync-orders] Missing userId in request body");
       return new Response(JSON.stringify({ error: "Missing userId in request body" }), { status: 400 });
     }
+
+    console.log("📌 [sync-orders] Processing orders for userId:", userId);
 
     // 1) Get the user's Alpaca keys from Supabase
     const { data: creds, error: credsError } = await supabase
@@ -31,13 +36,15 @@ serve(async (req) => {
       .single();
 
     if (credsError || !creds) {
-      console.error("Failed to fetch Alpaca credentials for user:", userId, credsError);
+      console.error("❌ [sync-orders] Failed to fetch Alpaca credentials for user:", userId, credsError);
       return new Response(JSON.stringify({ error: "Failed to fetch Alpaca credentials" }), { status: 404 });
     }
 
     const { api_key, secret_key } = creds as { api_key: string; secret_key: string; };
+    console.log("🔑 [sync-orders] Alpaca credentials retrieved");
 
     // 2) Fetch orders from Alpaca
+    console.log("🌐 [sync-orders] Fetching orders from Alpaca API...");
     const alpacaResp = await fetch(`${ALPACA_BASE}/v2/orders?status=all&limit=50`, {
       headers: {
         "APCA-API-KEY-ID": api_key,
@@ -47,14 +54,15 @@ serve(async (req) => {
 
     if (!alpacaResp.ok) {
       const txt = await alpacaResp.text().catch(() => "");
-      console.error("Alpaca API error:", alpacaResp.status, txt);
+      console.error("❌ [sync-orders] Alpaca API error:", alpacaResp.status, txt);
       return new Response(JSON.stringify({ error: `Alpaca API error: ${alpacaResp.status}` }), { status: 502 });
     }
 
     const ordersData = await alpacaResp.json();
+    console.log(`📥 [sync-orders] Retrieved ${Array.isArray(ordersData) ? ordersData.length : 0} orders from Alpaca`);
 
     if (!Array.isArray(ordersData)) {
-      console.error("Unexpected Alpaca response shape:", ordersData);
+      console.error("❌ [sync-orders] Unexpected Alpaca response shape:", ordersData);
       return new Response(JSON.stringify({ error: "Unexpected Alpaca response" }), { status: 502 });
     }
 
@@ -103,21 +111,24 @@ serve(async (req) => {
       };
     });
 
+    console.log(`📝 [sync-orders] Prepared ${upserts.length} orders for upsert`);
+
     // 4) Upsert into orders table
     const { error: upsertError } = await supabase
       .from("orders")
       .upsert(upserts, { onConflict: "alpaca_order_id" });
 
     if (upsertError) {
-      console.error("Upsert to orders failed:", upsertError);
+      console.error("❌ [sync-orders] Upsert to orders failed:", upsertError);
       return new Response(JSON.stringify({ error: "Failed to upsert orders" }), { status: 500 });
     }
 
+    console.log(`✅ [sync-orders] Successfully upserted ${upserts.length} orders`);
     return new Response(JSON.stringify({ success: true, count: upserts.length }), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (err) {
-    console.error("sync-orders function error:", err);
+    console.error("❌ [sync-orders] Function error:", err);
     return new Response(JSON.stringify({ error: String(err) }), { status: 500 });
   }
 });

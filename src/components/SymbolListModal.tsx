@@ -19,11 +19,12 @@ type Symbol = {
 };
 
 interface SymbolListModalProps {
+  open: boolean;
   onClose: () => void;
   symbols: Symbol[];
 }
 
-const SymbolListModal: React.FC<SymbolListModalProps> = ({ onClose, symbols }) => {
+const SymbolListModal: React.FC<SymbolListModalProps> = ({ open, onClose, symbols }) => {
   const [search, setSearch] = useState('');
   const [exchangeFilter, setExchangeFilter] = useState('');
 
@@ -45,7 +46,7 @@ const SymbolListModal: React.FC<SymbolListModalProps> = ({ onClose, symbols }) =
   }, [symbols]);
 
   return (
-    <Dialog open onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="bg-[#1a1a1a] text-white max-w-4xl max-h-[90vh] overflow-y-auto p-6 rounded-lg">
         <DialogHeader>
           <DialogTitle className="text-xl">Trade Symbols</DialogTitle>

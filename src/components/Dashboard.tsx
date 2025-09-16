@@ -13,9 +13,6 @@ import { Button } from '@/components/ui/button';
 import SymbolListModal from './SymbolListModal';
 import { supabase } from '@/lib/supabase';
 
-// ------------------------
-// Explicit type for Alpaca positions
-// ------------------------
 type AlpacaPosition = {
   symbol: string;
   qty: number;
@@ -45,18 +42,15 @@ const Dashboard = forwardRef<any, DashboardProps>(({ executedTrades }, ref) => {
   const [symbols, setSymbols] = useState<any[]>([]);
 
   // ------------------------
-  // Fetch account balance / P&L / daily change directly from Alpaca
+  // Fetch account info
   // ------------------------
   const fetchAccountInfo = async () => {
     if (!user?.id) return;
     setRefreshing(true);
-
     try {
       const keys = await getUserAlpacaKeys(user.id);
       if (!keys) return;
-
       const account = await getAlpacaAccount(keys.api_key, keys.secret_key);
-
       setAccountBalance(Number(account.cash ?? 0));
       setTotalPnl(Number(account.equity ?? 0) - Number(account.last_equity ?? 0));
       setDailyChange(Number(account.equity ?? 0) - Number(account.last_equity ?? 0));
@@ -71,16 +65,14 @@ const Dashboard = forwardRef<any, DashboardProps>(({ executedTrades }, ref) => {
   };
 
   // ------------------------
-  // Fetch active trades for dashboard card
+  // Fetch active trades
   // ------------------------
   const fetchActiveTrades = async () => {
     if (!user?.id) return;
     setActiveTradesLoading(true);
-
     try {
       const keys = await getUserAlpacaKeys(user.id);
       if (!keys) return;
-
       const positions: AlpacaPosition[] = await getAlpacaPositions(keys.api_key, keys.secret_key);
       const filtered: AlpacaPosition[] = positions.filter((p: AlpacaPosition) => Number(p.qty ?? 0) > 0);
       setActiveTrades(filtered);
@@ -93,29 +85,46 @@ const Dashboard = forwardRef<any, DashboardProps>(({ executedTrades }, ref) => {
   };
 
   // ------------------------
-  // Fetch orders (for Orders widget)
+  // Fetch orders with logging
   // ------------------------
   const fetchOrders = async () => {
     if (!user?.id) return;
     setOrdersLoading(true);
+    console.log("🔄 [Dashboard] Starting fetchOrders for userId:", user.id);
 
     try {
-      const response = await fetch(`/api/syncOrders?userId=${user.id}`);
-      const data = await response.json();
-      setOrders(data.orders || []);
+      const { data, error } = await supabase
+        .from("orders")
+        .select(
+          "alpaca_order_id, symbol, type, side, qty, filled_qty, filled_avg_price, status, submitted_at, filled_at"
+        )
+        .eq("user_id", user.id)
+        .order("submitted_at", { ascending: false })
+        .limit(10);
+
+      if (error) {
+        console.error("❌ [Dashboard] Error fetching orders:", error);
+        setOrders([]);
+      } else {
+        console.log("✅ [Dashboard] Orders fetched successfully:", data);
+        setOrders(data || []);
+      }
     } catch (err) {
-      console.error('Error fetching orders:', err);
+      console.error("❌ [Dashboard] Exception while fetching orders:", err);
       setOrders([]);
     } finally {
       setOrdersLoading(false);
+      console.log("🏁 [Dashboard] fetchOrders completed");
     }
   };
 
   // ------------------------
-  // Manual refresh button
+  // Manual refresh
   // ------------------------
   const fetchAllData = async () => {
+    console.log("🔄 [Dashboard] Running fetchAllData");
     await Promise.all([fetchAccountInfo(), fetchActiveTrades(), fetchOrders()]);
+    console.log("✅ [Dashboard] fetchAllData completed");
   };
 
   useImperativeHandle(ref, () => ({
@@ -131,9 +140,10 @@ const Dashboard = forwardRef<any, DashboardProps>(({ executedTrades }, ref) => {
   const shimmerClass = refreshing ? 'animate-pulse bg-gray-700/50' : '';
 
   // ------------------------
-  // Initial load: fetch each card separately
+  // Initial load
   // ------------------------
   useEffect(() => {
+    console.log("📌 [Dashboard] Initial load");
     fetchAccountInfo();
     fetchActiveTrades();
     fetchOrders();
@@ -144,8 +154,8 @@ const Dashboard = forwardRef<any, DashboardProps>(({ executedTrades }, ref) => {
       <div className="max-w-7xl mx-auto flex gap-3 items-start">
         {/* Left column */}
         <div className="flex flex-col gap-3">
-          {/* Top row cards */}
           <div className="flex gap-2 mb-2">
+            {/* Account Balance */}
             <Card className={`bg-[#1a1a1a] border-gray-700 w-64 ${shimmerClass}`}>
               <CardHeader className="pb-1 flex justify-between items-center">
                 <CardTitle className="text-gray-300 text-sm">Account Balance</CardTitle>
@@ -158,6 +168,7 @@ const Dashboard = forwardRef<any, DashboardProps>(({ executedTrades }, ref) => {
               </CardContent>
             </Card>
 
+            {/* Total P&L */}
             <Card className={`bg-[#1a1a1a] border-gray-700 w-64 ${shimmerClass}`}>
               <CardHeader className="pb-1 flex justify-between items-center">
                 <CardTitle className="text-gray-300 text-sm">Total P&L</CardTitle>
@@ -170,6 +181,7 @@ const Dashboard = forwardRef<any, DashboardProps>(({ executedTrades }, ref) => {
               </CardContent>
             </Card>
 
+            {/* Daily Change */}
             <Card className={`bg-[#1a1a1a] border-gray-700 w-64 ${shimmerClass}`}>
               <CardHeader className="pb-1 flex justify-between items-center">
                 <CardTitle className="text-gray-300 text-sm">Daily Change</CardTitle>
@@ -183,7 +195,7 @@ const Dashboard = forwardRef<any, DashboardProps>(({ executedTrades }, ref) => {
             </Card>
           </div>
 
-          {/* Active Trades card */}
+          {/* Active Trades */}
           <Card className={`bg-[#1a1a1a] border-gray-700 w-[48rem]`}>
             <CardHeader className="pb-1 flex justify-between items-center">
               <CardTitle className="text-gray-300 text-sm">Active Trades</CardTitle>
@@ -198,7 +210,6 @@ const Dashboard = forwardRef<any, DashboardProps>(({ executedTrades }, ref) => {
                   {activeTrades.map((pos: AlpacaPosition, i: number) => {
                     const pnlValue = parseFloat(pos.unrealized_pl as any) || 0;
                     const pnlColor = pnlValue > 0 ? 'text-green-500' : pnlValue < 0 ? 'text-red-500' : 'text-gray-300';
-
                     return (
                       <li key={i} className="flex text-sm text-white">
                         <div className="w-1/3 text-left">{pos.symbol}</div>
@@ -214,14 +225,14 @@ const Dashboard = forwardRef<any, DashboardProps>(({ executedTrades }, ref) => {
             </CardContent>
           </Card>
 
-          {/* Orders card */}
+          {/* Orders Card */}
           <Card className={`bg-[#1a1a1a] border-gray-700 w-[48rem] h-36`}>
             <CardHeader className="pb-1 flex justify-between items-center">
               <CardTitle className="text-gray-300 text-sm">Orders</CardTitle>
             </CardHeader>
             <CardContent className="max-h-36 overflow-y-auto">
               {ordersLoading ? (
-                <p className="text-gray-500">Syncing orders...</p>
+                <p className="text-gray-500">Loading Orders...</p>
               ) : orders.length === 0 ? (
                 <p className="text-gray-400">No orders yet</p>
               ) : (
@@ -250,9 +261,9 @@ const Dashboard = forwardRef<any, DashboardProps>(({ executedTrades }, ref) => {
                           </td>
                           <td className="p-2 border">{o.qty}</td>
                           <td className="p-2 border">{o.filled_qty}</td>
-                          <td className="p-2 border">{o.avg_fill_price}</td>
+                          <td className="p-2 border">{o.filled_avg_price}</td>
                           <td className="p-2 border">{o.status}</td>
-                          <td className="p-2 border">{new Date(o.submitted_at).toLocaleDateString()}</td>
+                          <td className="p-2 border">{o.submitted_at ? new Date(o.submitted_at).toLocaleDateString() : '-'}</td>
                           <td className="p-2 border">{o.filled_at ? new Date(o.filled_at).toLocaleDateString() : '-'}</td>
                         </tr>
                       ))}
@@ -314,9 +325,12 @@ const Dashboard = forwardRef<any, DashboardProps>(({ executedTrades }, ref) => {
             </CardContent>
           </Card>
 
-          {symbolModalOpen && (
-            <SymbolListModal symbols={symbols} onClose={() => setSymbolModalOpen(false)} />
-          )}
+          {/* Only change made here: added `open={symbolModalOpen}` */}
+          <SymbolListModal
+            symbols={symbols}
+            onClose={() => setSymbolModalOpen(false)}
+            open={symbolModalOpen}
+          />
         </div>
       </div>
     </div>
