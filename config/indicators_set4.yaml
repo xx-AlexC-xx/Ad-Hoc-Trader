@@ -1,0 +1,23 @@
+# Mean-reversion tilt with volume confirmation
+indicators:
+  - name: sma
+    params:
+      length: 10
+  - name: sma
+    params:
+      length: 50
+  - name: rsi
+    params:
+      length: 5
+  - name: cci
+    params:
+      length: 20
+  - name: mfi
+    params:
+      length: 14
+  - name: bbands
+    params:
+      length: 15
+      std: 2.2
+  - name: obv
+    params: {}

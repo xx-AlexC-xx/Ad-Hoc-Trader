@@ -33,7 +33,7 @@ const AppLayout: React.FC = () => {
       <Header fetchAllData={() => dashboardRef.current?.fetchAllData()} />
 
       <main className="max-w-7xl mx-auto p-6">
-        <Dashboard ref={dashboardRef} executedTrades={executedTrades} />
+        
       </main>
 
       <Footer />

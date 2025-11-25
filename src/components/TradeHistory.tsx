@@ -1,142 +1,206 @@
-// src/components/TradeHistory.tsx
-import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useAppContext } from '@/contexts/AppContext';
-import { fetchTradesFromSupabase, TradeUpsert as SupabaseTrade } from '@/lib/supabase_trades';
-import { updateClosedTrades, Trade as AlpacaTrade } from '@/lib/updateClosedTrades';
+// --- TradeHistory.tsx ---
+import React, { useEffect, useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { getUserAlpacaKeys } from "@/lib/alpaca_api_client";
+import { AlpacaTradeActivity } from "@/lib/alpaca_api_client";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-interface Trade {
-  id?: string;
-  user_id?: string;
+interface Order {
+  alpaca_order_id: string;
   symbol: string;
-  entryPrice: number;
-  exitPrice: number;
-  pnl?: number;
-  exit_reason?: string;
-  exit_time?: string;
-  status?: string;
+  type: string;
+  side: string;
+  qty: number;
+  filled_qty: number;
+  status: string;
+  source?: string;
+  submitted_at: string | null;
+  [key: string]: any;
 }
 
-// 👇 Define what the parent (Dashboard) can call
-export interface TradeHistoryRef {
-  fetchTrades: () => void;
+interface TradeHistoryProps {
+  userId: string;
 }
 
-const TradeHistory = forwardRef<TradeHistoryRef>((props, ref) => {
-  const { user } = useAppContext();
-  const [closedTrades, setClosedTrades] = useState<Trade[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchTrades = async () => {
-    if (!user?.id) return;
-    setLoading(true);
-    setError(null);
-
-    try {
-      await updateClosedTrades(user.id);
-      const trades: SupabaseTrade[] = await fetchTradesFromSupabase(user.id);
-
-      const transformedTrades: Trade[] = trades.map((t) => ({
-        id: t.trade_id || `${t.user_id}-${t.symbol}-${t.exit_time}`,
-        user_id: t.user_id,
-        symbol: t.symbol,
-        entryPrice: t.entry_price || t.filled_price || 0,
-        exitPrice: t.exit_price || t.filled_price || 0,
-        pnl: t.pnl || 0,
-        exit_reason: t.status === 'closed' ? 'closed' : 'manual',
-        exit_time: t.exit_time || t.updated_at,
-        status: t.status,
-      }));
-
-      setClosedTrades(transformedTrades);
-    } catch (err: any) {
-      setError(err.message || 'Unknown error fetching trades');
-      setClosedTrades([]);
-    }
-
-    setLoading(false);
-  };
-
-  // 👇 Expose fetchTrades to parent (Dashboard)
-  useImperativeHandle(ref, () => ({
-    fetchTrades,
-  }));
+export const TradeHistory: React.FC<TradeHistoryProps> = ({ userId }) => {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   useEffect(() => {
-    const timeout = setTimeout(fetchTrades, 1000);
-    return () => clearTimeout(timeout);
-  }, [user]);
+    const fetchOrders = async () => {
+      setLoading(true);
+
+      try {
+        const keys = await getUserAlpacaKeys(userId);
+        if (!keys) {
+          console.error("❌ No Alpaca keys found for user:", userId);
+          setOrders([]);
+          setLoading(false);
+          return;
+        }
+
+        const res = await fetch(`https://paper-api.alpaca.markets/v2/orders?status=all&limit=200`, {
+          headers: {
+            "APCA-API-KEY-ID": keys.api_key,
+            "APCA-API-SECRET-KEY": keys.secret_key,
+          },
+        });
+
+        if (!res.ok) throw new Error(`Failed to fetch orders: ${res.statusText}`);
+        const data: AlpacaTradeActivity[] = await res.json();
+
+        // Map to Order interface and sort by submitted_at descending
+        const mapped: Order[] = data
+          .map((o) => ({
+            alpaca_order_id: o.id,
+            symbol: o.symbol,
+            type: o.type,
+            side: o.side,
+            qty: Number(o.qty),
+            filled_qty: Number(o.cum_qty),
+            status: o.status ?? "pending",
+            source: o.source ?? "",
+            submitted_at: o.transaction_time ?? null,
+            raw: o,
+          }))
+          .sort((a, b) =>
+            new Date(b.submitted_at || "").getTime() - new Date(a.submitted_at || "").getTime()
+          );
+
+        // Keep last 100 for trade history
+        setOrders(mapped.slice(0, 100));
+      } catch (err) {
+        console.error("❌ Error fetching trade history:", err);
+        setOrders([]);
+      }
+
+      setLoading(false);
+    };
+
+    fetchOrders();
+  }, [userId]);
+
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return "-";
+    return new Date(dateStr).toLocaleString("en-US");
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "filled":
+        return "text-green-500";
+      case "canceled":
+        return "text-red-500";
+      case "expired":
+        return "text-gray-400";
+      case "pending":
+      case "accepted":
+        return "text-yellow-500";
+      default:
+        return "text-gray-300";
+    }
+  };
 
   return (
-    <Card className="bg-gray-900 border-gray-700">
-      <CardHeader className="flex justify-between items-center">
-        <CardTitle className="text-white">Trade History</CardTitle>
-        <button
-          className="text-sm text-blue-400 underline hover:text-blue-300"
-          onClick={fetchTrades}
-        >
-          Refresh
-        </button>
+    <Card>
+      <CardHeader>
+        <CardTitle>Trade History</CardTitle>
       </CardHeader>
       <CardContent>
         {loading ? (
-          <div className="text-center py-8 text-gray-400">Loading trade history...</div>
-        ) : error ? (
-          <div className="text-center py-8 text-red-500">Error loading trades: {error}</div>
-        ) : closedTrades.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-gray-400">No trades completed yet</p>
-            <p className="text-sm text-gray-500">Execute trades to see history</p>
-          </div>
+          <div className="text-center py-4">Loading trade history...</div>
+        ) : orders.length === 0 ? (
+          <div className="text-center py-4">No trades found.</div>
         ) : (
-          <div className="overflow-x-auto">
-            <Table>
+          <ScrollArea className="overflow-x-auto">
+            <Table className="w-full min-w-[1000px]">
               <TableHeader>
-                <TableRow className="border-gray-700">
-                  <TableHead className="text-gray-300">Symbol</TableHead>
-                  <TableHead className="text-gray-300">Entry</TableHead>
-                  <TableHead className="text-gray-300">Exit</TableHead>
-                  <TableHead className="text-gray-300">P&L</TableHead>
-                  <TableHead className="text-gray-300">Reason</TableHead>
-                  <TableHead className="text-gray-300">Date</TableHead>
+                <TableRow>
+                  <TableHead>Asset</TableHead>
+                  <TableHead>Order Type</TableHead>
+                  <TableHead>Side</TableHead>
+                  <TableHead className="text-right">Qty</TableHead>
+                  <TableHead className="text-right">Filled Qty</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Source</TableHead>
+                  <TableHead>Submitted At</TableHead>
+                  <TableHead>Details</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {closedTrades.map((trade) => {
-                  const pnl = trade.pnl ?? 0;
-                  return (
-                    <TableRow key={trade.id} className="border-gray-700">
-                      <TableCell>
-                        <Badge className="bg-blue-600">{trade.symbol}</Badge>
-                      </TableCell>
-                      <TableCell className="text-white">${trade.entryPrice.toFixed(2)}</TableCell>
-                      <TableCell className="text-white">${trade.exitPrice.toFixed(2)}</TableCell>
-                      <TableCell className={pnl >= 0 ? 'text-green-400' : 'text-red-400'}>
-                        {pnl >= 0 ? '+' : ''}
-                        {pnl.toFixed(2)}%
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={pnl >= 0 ? 'bg-green-600' : 'bg-red-600'}>
-                          {trade.exit_reason || 'manual'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-gray-400">
-                        {trade.exit_time ? new Date(trade.exit_time).toLocaleDateString() : '--'}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                {orders.map((order) => (
+                  <TableRow key={order.alpaca_order_id}>
+                    <TableCell>{order.symbol}</TableCell>
+                    <TableCell>{order.type}</TableCell>
+                    <TableCell>{order.side}</TableCell>
+                    <TableCell className="text-right">{order.qty.toLocaleString()}</TableCell>
+                    <TableCell className="text-right">{order.filled_qty.toLocaleString()}</TableCell>
+                    <TableCell className={getStatusColor(order.status)}>{order.status}</TableCell>
+                    <TableCell>{order.source}</TableCell>
+                    <TableCell>{formatDate(order.submitted_at)}</TableCell>
+                    <TableCell>
+                      <span
+                        className="text-red-500 underline cursor-pointer text-sm"
+                        onClick={() => setSelectedOrder(order)}
+                      >
+                        Details
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
-          </div>
+          </ScrollArea>
+        )}
+
+        {selectedOrder && (
+          <Dialog open={true} onOpenChange={() => setSelectedOrder(null)}>
+            <DialogContent className="max-w-xl">
+              <DialogHeader>
+                <DialogTitle>Order Details</DialogTitle>
+                <DialogClose />
+              </DialogHeader>
+              <div className="grid grid-cols-2 gap-2 py-4 border border-gray-700 p-2 rounded-md">
+                <div className="font-semibold text-sm">Symbol</div>
+                <div className="text-sm">{selectedOrder.symbol}</div>
+
+                <div className="font-semibold text-sm">Side</div>
+                <div className="text-sm">{selectedOrder.side}</div>
+
+                <div className="font-semibold text-sm">Order Type</div>
+                <div className="text-sm">{selectedOrder.type}</div>
+
+                <div className="font-semibold text-sm">Quantity</div>
+                <div className="text-sm">{selectedOrder.qty.toLocaleString()}</div>
+
+                <div className="font-semibold text-sm">Filled Qty</div>
+                <div className="text-sm">{selectedOrder.filled_qty.toLocaleString()}</div>
+
+                <div className="font-semibold text-sm">Status</div>
+                <div className="text-sm">{selectedOrder.status}</div>
+
+                <div className="font-semibold text-sm">Source</div>
+                <div className="text-sm">{selectedOrder.source}</div>
+
+                <div className="font-semibold text-sm">Submitted At</div>
+                <div className="text-sm">{formatDate(selectedOrder.submitted_at)}</div>
+              </div>
+            </DialogContent>
+          </Dialog>
         )}
       </CardContent>
     </Card>
   );
-});
+};
 
-TradeHistory.displayName = 'TradeHistory';
 export default TradeHistory;

@@ -18,6 +18,8 @@ export type AlpacaTradeActivity = {
   cum_qty: string;
   leaves_qty: string;
   type: string;
+  status?: string;
+  source?: string;
 };
 
 // --- Get User's Alpaca API Keys ---

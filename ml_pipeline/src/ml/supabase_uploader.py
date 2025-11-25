@@ -1,30 +1,26 @@
 """Module that uploads stock market data to Supabase from Alpha Vantage."""
 
 import logging
-import os
 from datetime import datetime, timezone
 from requests.exceptions import RequestException
-from dotenv import load_dotenv
 import pandas as pd
 from supabase import create_client, Client
 
+from .config import SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 
-# Load environment variables
-load_dotenv()
-
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE")
 TABLE_NAME = "stock_prices"
+LOG_TABLE_NAME = "pipeline_logs"
+MODEL_METADATA_TABLE = "model_metadata"
 
 
 class SupabaseUploadError(Exception):
     """Raised when Supabase data upload fails."""
 
 
-if not SUPABASE_URL or not SUPABASE_KEY:
+if not SUPABASE_URL or not SUPABASE_SERVICE_ROLE_KEY:
     raise ValueError("❌ Missing Supabase credentials. Check your .env file.")
 
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
 
 def upload_to_supabase(df: pd.DataFrame, symbol: str) -> None:
@@ -60,6 +56,57 @@ def upload_to_supabase(df: pd.DataFrame, symbol: str) -> None:
     except (ValueError, KeyError, RequestException) as e:
         logging.error("Upload failed due to known error: %s", e)
         raise SupabaseUploadError(f"Upload failed due to known error: {e}") from e
+
+
+def upload_logs_to_supabase(
+    logs: list[dict], table_name: str = LOG_TABLE_NAME
+) -> None:
+    """
+    Upload a batch of log dictionaries to Supabase.
+
+    Args:
+        logs: List of dictionaries with log metadata (timestamp, level, message, etc.).
+        table_name: Destination Supabase table, defaults to pipeline_logs.
+    """
+    if not logs:
+        logging.info("No logs to upload.")
+        return
+
+    try:
+        for chunk_start in range(0, len(logs), 100):
+            chunk = logs[chunk_start : chunk_start + 100]
+            response = supabase.table(table_name).insert(chunk).execute()
+            if response.error:
+                raise SupabaseUploadError(response.error.message)
+        logging.info("✅ Uploaded %d log entries to %s.", len(logs), table_name)
+    except (ValueError, KeyError, RequestException) as e:
+        logging.error("Failed to upload logs to Supabase: %s", e)
+        raise SupabaseUploadError(f"Failed to upload logs: {e}") from e
+
+
+def upload_model_metadata(
+    metadata: dict,
+    table_name: str = MODEL_METADATA_TABLE,
+) -> None:
+    """
+    Upload model metadata/metrics to Supabase.
+
+    Args:
+        metadata: JSON-serializable metadata dictionary.
+        table_name: Destination table name (default: model_metadata).
+    """
+    if not metadata:
+        logging.info("No metadata provided for upload.")
+        return
+
+    try:
+        response = supabase.table(table_name).insert(metadata).execute()
+        if response.error:
+            raise SupabaseUploadError(response.error.message)
+        logging.info("✅ Uploaded model metadata to %s.", table_name)
+    except (ValueError, KeyError, RequestException) as e:
+        logging.error("Failed to upload model metadata: %s", e)
+        raise SupabaseUploadError(f"Failed to upload model metadata: {e}") from e
 
 
 # Optional test runner

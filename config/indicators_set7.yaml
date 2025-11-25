@@ -1,0 +1,26 @@
+# Intraday/scalping focus with fast signals
+indicators:
+  - name: ema
+    params:
+      length: 5
+  - name: ema
+    params:
+      length: 13
+  - name: rsi
+    params:
+      length: 3
+  - name: stoch
+    params:
+      k: 9
+      d: 3
+      smooth_k: 3
+  - name: atr
+    params:
+      length: 10
+  - name: bbands
+    params:
+      length: 10
+      std: 1.8
+  - name: linreg
+    params:
+      length: 14

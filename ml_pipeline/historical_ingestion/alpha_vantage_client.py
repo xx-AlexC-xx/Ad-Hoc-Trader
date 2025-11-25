@@ -15,7 +15,7 @@ Dependencies:
 """
 
 import requests
-from ml_pipeline.historical_ingestion.config import ALPHA_VANTAGE_API_KEY
+from ml_pipeline.src.ml.config import ALPHA_VANTAGE_API_KEY
 
 
 BASE_URL = "https://www.alphavantage.co/query"

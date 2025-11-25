@@ -1,0 +1,39 @@
+{
+  "symbol": "AAPL",
+  "dataset": {
+    "source": "cache",
+    "path": null,
+    "type": "features",
+    "mode": "intraday",
+    "interval": "60min",
+    "outputsize": "compact",
+    "version": "latest"
+  },
+  "model": "random_forest",
+  "task": "regression",
+  "hyperparameters": {},
+  "metrics": {
+    "validation": {
+      "mae": 0.002498110070895702,
+      "rmse": 0.0030165117600821686,
+      "r2": -0.20448228943731683
+    },
+    "cross_validation": {
+      "mae_mean": 0.003603629666313741,
+      "rmse_mean": 0.0045230185874510715,
+      "r2_mean": -0.8358617116548437,
+      "mae_std": 0.0010182831200043303,
+      "rmse_std": 0.0013504917317052909,
+      "r2_std": 0.9007329181293636
+    }
+  },
+  "timestamp": "2025-11-24T04:16:56.759497",
+  "feature_columns": [
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume"
+  ],
+  "target_column": "target"
+}

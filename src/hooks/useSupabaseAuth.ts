@@ -11,6 +11,8 @@ export function useSupabaseAuth() {
   useEffect(() => {
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      console.log("🔍 Initial session from supabase.auth.getSession:", session);
+
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -19,6 +21,10 @@ export function useSupabaseAuth() {
     getSession();
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("🌍 Auth state change event:", _event);
+      console.log("📦 New session object:", session);
+      console.log("👤 User from session:", session?.user ?? null);
+
       setSession(session);
       setUser(session?.user ?? null);
     });

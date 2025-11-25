@@ -1,0 +1,26 @@
+# Mixed toolkit for robustness testing
+indicators:
+  - name: ema
+    params:
+      length: 21
+  - name: tema
+    params:
+      length: 30
+  - name: macd
+    params:
+      fast: 13
+      slow: 34
+      signal: 9
+  - name: adx
+    params:
+      length: 10
+  - name: atr
+    params:
+      length: 14
+  - name: mfi
+    params:
+      length: 8
+  - name: bbands
+    params:
+      length: 18
+      std: 2.1

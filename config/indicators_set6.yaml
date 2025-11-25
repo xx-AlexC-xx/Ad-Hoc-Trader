@@ -1,0 +1,25 @@
+# Longer-horizon trend with confirmation
+indicators:
+  - name: sma
+    params:
+      length: 50
+  - name: sma
+    params:
+      length: 200
+  - name: ema
+    params:
+      length: 34
+  - name: adx
+    params:
+      length: 20
+  - name: mfi
+    params:
+      length: 21
+  - name: atr
+    params:
+      length: 21
+  - name: macd
+    params:
+      fast: 12
+      slow: 50
+      signal: 9

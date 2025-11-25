@@ -29,30 +29,27 @@ const Header: React.FC<HeaderProps> = ({ fetchAllData }) => {
   }, []);
 
   return (
-    <header className="bg-black text-white p-4 border-b border-gray-800">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Left: Logo and Titles */}
-        <div className="flex items-center space-x-4">
+    <header className="w-full h-28 relative bg-[url('/image1.png')] bg-cover bg-center bg-no-repeat text-white border-b border-gray-800">
+      {/* Inner container for padding and content */}
+      <div className="max-w-7xl mx-auto flex items-center justify-between h-full px-4 relative z-10">
+        {/* Left: Logo */}
+        <div className="flex items-center space-x+10 z-0">
           <img
-            src="https://d64gsuwffb70l.cloudfront.net/683e88b9e6e8029a192a1882_1749807866484_e86fbe99.PNG"
-            alt="ADHOC Trading"
-            className="h-12 w-auto"
+            src="/"
+            alt="LoGo Here"
+            className="h-flex w-60"
           />
-          <div>
-            <h1 className="text-2xl font-bold text-white">ADHOC TRADING</h1>
-            <p className="text-sm text-gray-400">AI-Powered Trading Platform</p>
-          </div>
         </div>
 
         {/* Right: User Info, Theme Toggle, Refresh */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 z-10">
           {/* 🔁 Smart Refresh Button */}
           <Button
             variant="ghost"
             onClick={fetchAllData}
             className="text-white hover:bg-gray-800"
           >
-            🔄 Refresh
+            {/* button here if needed */}
           </Button>
 
           {/* 👤 User Info + Logout */}
@@ -65,6 +62,11 @@ const Header: React.FC<HeaderProps> = ({ fetchAllData }) => {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Center Text: AI Trading Bot */}
+      <div className="absolute inset-0 flex items-end justify-center pb-4 z-0 pointer-events-none">
+        <span className="text-white text-xl font-bold"></span>
       </div>
     </header>
   );

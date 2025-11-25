@@ -1,0 +1,26 @@
+# Volatility breakout with momentum confirmation
+indicators:
+  - name: ema
+    params:
+      length: 20
+  - name: ema
+    params:
+      length: 100
+  - name: macd
+    params:
+      fast: 5
+      slow: 35
+      signal: 5
+  - name: atr
+    params:
+      length: 14
+  - name: supertrend
+    params:
+      period: 10
+      multiplier: 3.0
+  - name: rsi
+    params:
+      length: 10
+  - name: roc
+    params:
+      length: 20

@@ -1,0 +1,26 @@
+# Short-term momentum and volatility focus
+indicators:
+  - name: ema
+    params:
+      length: 9
+  - name: ema
+    params:
+      length: 21
+  - name: rsi
+    params:
+      length: 7
+  - name: stoch
+    params:
+      k: 14
+      d: 3
+      smooth_k: 3
+  - name: atr
+    params:
+      length: 14
+  - name: bbands
+    params:
+      length: 14
+      std: 2
+  - name: roc
+    params:
+      length: 10

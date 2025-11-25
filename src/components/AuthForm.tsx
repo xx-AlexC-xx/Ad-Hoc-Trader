@@ -19,6 +19,8 @@ export default function AuthForm() {
     // Check if user is already logged in
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession()
+      console.log("🔑 Session:", { session });
+      
       if (session) {
         navigate('/dashboard')
       }
@@ -28,6 +30,7 @@ export default function AuthForm() {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log("🧪 Email/Password:", email, password);
     setLoading(true)
     setMessage('')
     
@@ -40,6 +43,8 @@ export default function AuthForm() {
             emailRedirectTo: `${window.location.origin}/dashboard`
           }
         })
+        console.log("🔑 Login response:", { data, error });
+
         if (error) {
           setMessage(error.message)
         } else {

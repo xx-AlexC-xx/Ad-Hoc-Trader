@@ -13,7 +13,6 @@
     "emitDeclarationOnly": true,
     "outDir": "./out-tsc/app",
     "types": [],
-    "files": [],
     "baseUrl": "src",
     "paths": {
       "@/*": ["*"]

@@ -1,0 +1,27 @@
+# Oscillator-heavy for sideways/mean-reversion markets
+indicators:
+  - name: rsi
+    params:
+      length: 14
+  - name: rsi
+    params:
+      length: 21
+  - name: cci
+    params:
+      length: 14
+  - name: stoch
+    params:
+      k: 14
+      d: 3
+      smooth_k: 3
+  - name: ultimate
+    params:
+      s: 7
+      m: 14
+      l: 28
+  - name: bbands
+    params:
+      length: 20
+      std: 2
+  - name: obv
+    params: {}

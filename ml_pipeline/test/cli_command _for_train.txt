@@ -1,0 +1,27 @@
+# python ml_pipeline/src/ml/train_model.py \
+# - --symbol AAPL \
+# --target-column target \
+# --model random_forest \
+#--hyperparams '{"n_estimators":200}' \
+#  --upload-metadata \
+ # --export-onnx \
+ # #--metrics-log ml_data/models/runs.yaml
+
+#// paste imto terminal to run the test
+
+
+
+
+python ml_pipeline/src/ml/train_model.py \
+  --symbol AAPL \
+  --target-column target \
+  --model random_forest \
+  --hyperparams '{"n_estimators":300,"max_depth":8}' \
+  --features-version latest \
+  --mode intraday \
+  --interval 60min \
+  --outputsize compact \
+  --upload-metadata \
+  --metadata-table model_metadata \
+  --export-onnx \
+  --metrics-log ml_data/models/runs.yaml

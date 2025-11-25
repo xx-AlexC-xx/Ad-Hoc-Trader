@@ -1,338 +1,293 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import HighPotentialTrades from './HighPotentialTrades';
-import AdvancedMarketTicker from './AdvancedMarketTicker';
-import SignalGenerator from './SignalGenerator';
-import ActiveTrades from './ActiveTrades';
-import TradeHistory from './TradeHistory';
-import BuySellModule from './BuySellModule';
 import { useUser } from '@supabase/auth-helpers-react';
-import { getUserAlpacaKeys, getAlpacaAccount, getAlpacaPositions } from '@/lib/alpaca';
-import { Button } from '@/components/ui/button';
-import SymbolListModal from './SymbolListModal';
-import { supabase } from '@/lib/supabase';
+import ActiveTrades from './ActiveTrades';
+import RecentOrders from './RecentOrders';
+import SignalGenerator from './SignalGenerator';
+import HighPotentialTrades from './HighPotentialTrades';
+import MarketTicker from '@/components/MarketTicker/MarketTicker';
+import BuySellModule from './BuySellModule';
+import { useAppContext } from '@/contexts/AppContext';
+import DashboardDnDWrapper from './DashboardDnDWrapper';
+import { RiMoneyDollarBoxLine, RiMoneyEuroBoxLine } from '@remixicon/react';
+import Sidebar from './Sidebar';
 
-type AlpacaPosition = {
-  symbol: string;
-  qty: number;
-  avg_entry_price: number;
-  unrealized_pl: number | string | null;
-};
+// react-icons imports
+import { FaWallet, FaChartLine, FaCalendarDay, FaBoxOpen, FaRegListAlt, FaListUl } from 'react-icons/fa';
+import { FaCompassDrafting } from 'react-icons/fa6';
+import SymbolList from './MarketTicker/SymbolsLists';
 
-interface DashboardProps {
-  executedTrades?: any[];
+interface Module {
+  key: string;
+  name: string;
+  icon: JSX.Element;
+  component: React.ReactNode;
+  isCardStyle?: boolean;
 }
 
-const Dashboard = forwardRef<any, DashboardProps>(({ executedTrades }, ref) => {
-  const user = useUser();
+const LOCK_STORAGE_KEY = 'dashboard-lock-grid';
 
-  const [accountBalance, setAccountBalance] = useState(0);
-  const [totalPnl, setTotalPnl] = useState(0);
-  const [dailyChange, setDailyChange] = useState(0);
-  const [positions, setPositions] = useState<AlpacaPosition[]>([]);
-  const [orders, setOrders] = useState<any[]>([]);
-  const [refreshing, setRefreshing] = useState(false);
-  const [ordersLoading, setOrdersLoading] = useState(false);
+// Wrap Dashboard with forwardRef to allow ref from App.tsx
+const Dashboard = forwardRef((props, ref) => {
+  const { user, totalPnl, dailyChange, cashAvailable, portfolioValue } = useAppContext();
+  console.log('[Dashboard] AppContext values:', { user, totalPnl, dailyChange, cashAvailable, portfolioValue });
 
-  const [activeTrades, setActiveTrades] = useState<AlpacaPosition[]>([]);
-  const [activeTradesLoading, setActiveTradesLoading] = useState(true);
+  const [modulesVisible, setModulesVisible] = useState<Record<string, boolean>>(() => {
+    const stored = localStorage.getItem('modulesVisible');
+    const initial = stored
+      ? JSON.parse(stored)
+      : {
+          cash: true,
+          portfolio: true,
+          activeTrades: false,
+          pnl: false,
+          dailyChange: false,
+          symbolsList: false,
+          ticker: false,
+          highPotentialTrades: false,
+          symbolAgent: false,
+          orders: false,
+          buySell: false,
+        };
+    console.log('[Dashboard] Initial modulesVisible:', initial);
+    return initial;
+  });
 
-  const [symbolModalOpen, setSymbolModalOpen] = useState(false);
-  const [symbols, setSymbols] = useState<any[]>([]);
+  const [selectedModule, setSelectedModule] = useState<string>(() => {
+    const stored = localStorage.getItem('selectedModule');
+    console.log('[Dashboard] Initial selectedModule:', stored || 'orders');
+    return stored || 'orders';
+  });
 
-  // ------------------------
-  // Fetch account info
-  // ------------------------
-  const fetchAccountInfo = async () => {
-    if (!user?.id) return;
-    setRefreshing(true);
+  const [showSymbolsListOnly, setshowSymbolsListOnly] = useState(false);
+  console.log('[Dashboard] symbolsListModalOpen initial:', showSymbolsListOnly);
+
+  const userId = user?.id ?? '';
+  console.log('[Dashboard] User ID:', userId);
+
+  // ✅ Lock toggle for dashboard grid (persisted)
+  const [lockGrid, setLockGrid] = useState<boolean>(() => {
     try {
-      const keys = await getUserAlpacaKeys(user.id);
-      if (!keys) return;
-      const account = await getAlpacaAccount(keys.api_key, keys.secret_key);
-      setAccountBalance(Number(account.cash ?? 0));
-      setTotalPnl(Number(account.equity ?? 0) - Number(account.last_equity ?? 0));
-      setDailyChange(Number(account.equity ?? 0) - Number(account.last_equity ?? 0));
+      const stored = localStorage.getItem(LOCK_STORAGE_KEY);
+      return stored ? stored === 'true' : false;
     } catch (err) {
-      console.error('Error fetching Alpaca account info:', err);
-      setAccountBalance(0);
-      setTotalPnl(0);
-      setDailyChange(0);
-    } finally {
-      setRefreshing(false);
+      console.warn('[Dashboard] Unable to read lock state from localStorage', err);
+      return false;
     }
+  });
+  const toggleLockGrid = () => {
+    setLockGrid((prev) => !prev);
+    console.log('[Dashboard] Lock grid toggled. New state:', !lockGrid);
   };
 
-  // ------------------------
-  // Fetch active trades
-  // ------------------------
-  const fetchActiveTrades = async () => {
-    if (!user?.id) return;
-    setActiveTradesLoading(true);
-    try {
-      const keys = await getUserAlpacaKeys(user.id);
-      if (!keys) return;
-      const positions: AlpacaPosition[] = await getAlpacaPositions(keys.api_key, keys.secret_key);
-      const filtered: AlpacaPosition[] = positions.filter((p: AlpacaPosition) => Number(p.qty ?? 0) > 0);
-      setActiveTrades(filtered);
-    } catch (err) {
-      console.error('Error fetching active trades for dashboard:', err);
-      setActiveTrades([]);
-    } finally {
-      setActiveTradesLoading(false);
-    }
-  };
-
-  // ------------------------
-  // Fetch orders with logging
-  // ------------------------
-  const fetchOrders = async () => {
-    if (!user?.id) return;
-    setOrdersLoading(true);
-    console.log("🔄 [Dashboard] Starting fetchOrders for userId:", user.id);
-
-    try {
-      const { data, error } = await supabase
-        .from("orders")
-        .select(
-          "alpaca_order_id, symbol, type, side, qty, filled_qty, filled_avg_price, status, submitted_at, filled_at"
-        )
-        .eq("user_id", user.id)
-        .order("submitted_at", { ascending: false })
-        .limit(10);
-
-      if (error) {
-        console.error("❌ [Dashboard] Error fetching orders:", error);
-        setOrders([]);
-      } else {
-        console.log("✅ [Dashboard] Orders fetched successfully:", data);
-        setOrders(data || []);
-      }
-    } catch (err) {
-      console.error("❌ [Dashboard] Exception while fetching orders:", err);
-      setOrders([]);
-    } finally {
-      setOrdersLoading(false);
-      console.log("🏁 [Dashboard] fetchOrders completed");
-    }
-  };
-
-  // ------------------------
-  // Manual refresh
-  // ------------------------
-  const fetchAllData = async () => {
-    console.log("🔄 [Dashboard] Running fetchAllData");
-    await Promise.all([fetchAccountInfo(), fetchActiveTrades(), fetchOrders()]);
-    console.log("✅ [Dashboard] fetchAllData completed");
-  };
-
-  useImperativeHandle(ref, () => ({
-    fetchAllData
-  }));
-
-  const getPnLColor = (value: number) => {
-    if (value > 0) return 'text-green-500';
-    if (value < 0) return 'text-red-500';
-    return 'text-gray-300';
-  };
-
-  const shimmerClass = refreshing ? 'animate-pulse bg-gray-700/50' : '';
-
-  // ------------------------
-  // Initial load
-  // ------------------------
   useEffect(() => {
-    console.log("📌 [Dashboard] Initial load");
-    fetchAccountInfo();
-    fetchActiveTrades();
-    fetchOrders();
-  }, [user]);
+    try {
+      localStorage.setItem(LOCK_STORAGE_KEY, String(lockGrid));
+    } catch (err) {
+      console.warn('[Dashboard] Unable to persist lock state', err);
+    }
+  }, [lockGrid]);
 
-  return (
-    <div className="min-h-screen bg-[#1a1a1a] p-6">
-      <div className="max-w-7xl mx-auto flex gap-3 items-start">
-        {/* Left column */}
-        <div className="flex flex-col gap-3">
-          <div className="flex gap-2 mb-2">
-            {/* Account Balance */}
-            <Card className={`bg-[#1a1a1a] border-gray-700 w-64 ${shimmerClass}`}>
-              <CardHeader className="pb-1 flex justify-between items-center">
-                <CardTitle className="text-gray-300 text-sm">Account Balance</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-400">
-                  ${accountBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </div>
-                <p className="text-xs text-gray-400">Available for trading</p>
-              </CardContent>
-            </Card>
+  // Save visibility to localStorage
+  useEffect(() => {
+    console.log('[Dashboard] Saving modulesVisible to localStorage:', modulesVisible);
+    localStorage.setItem('modulesVisible', JSON.stringify(modulesVisible));
+  }, [modulesVisible]);
 
-            {/* Total P&L */}
-            <Card className={`bg-[#1a1a1a] border-gray-700 w-64 ${shimmerClass}`}>
-              <CardHeader className="pb-1 flex justify-between items-center">
-                <CardTitle className="text-gray-300 text-sm">Total P&L</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className={`text-2xl font-bold ${getPnLColor(totalPnl)}`}>
-                  {totalPnl >= 0 ? '+' : ''}{totalPnl.toFixed(2)}
-                </div>
-                <p className="text-xs text-gray-400">Realized + Unrealized</p>
-              </CardContent>
-            </Card>
+  // Save selected module to localStorage
+  useEffect(() => {
+    console.log('[Dashboard] Saving selectedModule to localStorage:', selectedModule);
+    localStorage.setItem('selectedModule', selectedModule);
+  }, [selectedModule]);
 
-            {/* Daily Change */}
-            <Card className={`bg-[#1a1a1a] border-gray-700 w-64 ${shimmerClass}`}>
-              <CardHeader className="pb-1 flex justify-between items-center">
-                <CardTitle className="text-gray-300 text-sm">Daily Change</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className={`text-2xl font-bold ${getPnLColor(dailyChange)}`}>
-                  {dailyChange >= 0 ? '+' : ''}{dailyChange.toFixed(6)}
-                </div>
-                <p className="text-xs text-gray-400">Today’s P&L</p>
-              </CardContent>
-            </Card>
-          </div>
+  const toggleModuleVisibility = (key: string) => {
+    console.log('[Dashboard] toggleModuleVisibility called for key:', key);
+    setModulesVisible((prev) => {
+      const updated = { ...prev, [key]: !prev[key] };
+      console.log(`[Dashboard] Module visibility updated: ${key} =>`, updated[key]);
+      return updated;
+    });
+  };
 
-          {/* Active Trades */}
-          <Card className={`bg-[#1a1a1a] border-gray-700 w-[48rem]`}>
-            <CardHeader className="pb-1 flex justify-between items-center">
-              <CardTitle className="text-gray-300 text-sm">Active Trades</CardTitle>
-            </CardHeader>
-            <CardContent className="max-h-36 overflow-y-auto">
-              {activeTradesLoading ? (
-                <p className="text-gray-400">Loading active trades...</p>
-              ) : activeTrades.length === 0 ? (
-                <p className="text-gray-400">No active trades</p>
-              ) : (
-                <ul className="space-y-1">
-                  {activeTrades.map((pos: AlpacaPosition, i: number) => {
-                    const pnlValue = parseFloat(pos.unrealized_pl as any) || 0;
-                    const pnlColor = pnlValue > 0 ? 'text-green-500' : pnlValue < 0 ? 'text-red-500' : 'text-gray-300';
-                    return (
-                      <li key={i} className="flex text-sm text-white">
-                        <div className="w-1/3 text-left">{pos.symbol}</div>
-                        <div className="w-1/3 text-center">{pos.qty}</div>
-                        <div className={`w-1/3 text-right font-semibold ${pnlColor}`}>
-                          {pnlValue >= 0 ? '+' : ''}{pnlValue.toFixed(2)}
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </CardContent>
-          </Card>
+  const toggleSymbolsList = () => {
+    console.log('[Dashboard] toggleSymbolsList called');
+    setModulesVisible((prev) => {
+      const updated = { ...prev, symbolsList: !prev.symbolsList };
+      console.log('[Dashboard] symbolsList visibility updated:', updated.symbolsList);
+      return updated;
+    });
+  };
 
-          {/* Orders Card */}
-          <Card className={`bg-[#1a1a1a] border-gray-700 w-[48rem] h-36`}>
-            <CardHeader className="pb-1 flex justify-between items-center">
-              <CardTitle className="text-gray-300 text-sm">Orders</CardTitle>
-            </CardHeader>
-            <CardContent className="max-h-36 overflow-y-auto">
-              {ordersLoading ? (
-                <p className="text-gray-500">Loading Orders...</p>
-              ) : orders.length === 0 ? (
-                <p className="text-gray-400">No orders yet</p>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="min-w-full text-sm border">
-                    <thead className="bg-gray-100">
-                      <tr>
-                        <th className="p-2 border text-left">Symbol</th>
-                        <th className="p-2 border text-left">Type</th>
-                        <th className="p-2 border text-left">Side</th>
-                        <th className="p-2 border text-left">Qty</th>
-                        <th className="p-2 border text-left">Filled</th>
-                        <th className="p-2 border text-left">Avg Fill</th>
-                        <th className="p-2 border text-left">Status</th>
-                        <th className="p-2 border text-left">Submitted</th>
-                        <th className="p-2 border text-left">Filled At</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {orders.map((o: any) => (
-                        <tr key={o.alpaca_order_id} className="hover:bg-gray-50 text-white text-xs">
-                          <td className="p-2 border font-semibold">{o.symbol}</td>
-                          <td className="p-2 border">{o.type}</td>
-                          <td className={`p-2 border font-semibold ${o.side === 'buy' ? 'text-green-600' : 'text-red-600'}`}>
-                            {o.side.toUpperCase()}
-                          </td>
-                          <td className="p-2 border">{o.qty}</td>
-                          <td className="p-2 border">{o.filled_qty}</td>
-                          <td className="p-2 border">{o.filled_avg_price}</td>
-                          <td className="p-2 border">{o.status}</td>
-                          <td className="p-2 border">{o.submitted_at ? new Date(o.submitted_at).toLocaleDateString() : '-'}</td>
-                          <td className="p-2 border">{o.filled_at ? new Date(o.filled_at).toLocaleDateString() : '-'}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+  // Apply font size/style and reduced spacing for these four cards
+  const cardFontClass = 'text-sm';
+  const cardCompactClass = 'p-1'; // minimized padding for reduced dead space
 
-          {/* Tabs */}
-          <div className="w-full mt-2">
-            <Tabs defaultValue="signals" className="space-y-2">
-              <TabsList className="inline-flex space-x-2 bg-[#1a1a1a] px-2 py-1 rounded-lg w-full">
-                <TabsTrigger value="signals" className="text-white">Signal Generator</TabsTrigger>
-                <TabsTrigger value="potential" className="text-white">High Potential</TabsTrigger>
-                <TabsTrigger value="ticker" className="text-white">Live Ticker</TabsTrigger>
-                <TabsTrigger value="active" className="text-white">Active Trades</TabsTrigger>
-                <TabsTrigger value="history" className="text-white">Trade History</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="signals"><SignalGenerator /></TabsContent>
-              <TabsContent value="potential"><HighPotentialTrades onSymbolsUpdate={() => {}} onTradesSelected={() => {}} /></TabsContent>
-              <TabsContent value="ticker"><AdvancedMarketTicker /></TabsContent>
-              <TabsContent value="active"><ActiveTrades /></TabsContent>
-              <TabsContent value="history"><TradeHistory /></TabsContent>
-            </Tabs>
-          </div>
+  const modules: Module[] = [
+    {
+      key: 'cash',
+      name: 'Cash Available',
+      icon: <FaWallet />,
+      component: (
+        <div className={`${cardFontClass} ${cardCompactClass}`}>
+          ${cashAvailable.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </div>
-
-        {/* Right column */}
-        <div className="flex-shrink-0 w-80 flex flex-col gap-2">
-          <Button
-            className="mb-2 bg-gray-700 hover:bg-gray-600 text-white w-full"
-            onClick={async () => {
-              try {
-                const res = await fetch("/api/get-symbols");
-                const data = await res.json();
-                setSymbols(data.symbols || []);
-                setSymbolModalOpen(true);
-              } catch (err) {
-                console.error("Failed to fetch symbols:", err);
-              }
+      ),
+      isCardStyle: true,
+    },
+    {
+      key: 'pnl',
+      name: 'Total P&L',
+      icon: <FaChartLine />,
+      component: (
+        <div className={`${cardFontClass} ${cardCompactClass} ${totalPnl >= 0 ? 'text-teal-500' : 'text-fuchsia-500'}`}>
+          {totalPnl.toFixed(2)}
+        </div>
+      ),
+      isCardStyle: true,
+    },
+    {
+      key: 'dailyChange',
+      name: 'Daily Change',
+      icon: <FaCalendarDay />,
+      component: (
+        <div className={`${cardFontClass} ${cardCompactClass} ${dailyChange >= 0 ? 'text-teal-500' : 'text-fuchsia-500'}`}>
+          {dailyChange.toFixed(6)}
+        </div>
+      ),
+      isCardStyle: true,
+    },
+    {
+      key: 'portfolio',
+      name: 'Portfolio Value',
+      icon: <FaBoxOpen />,
+      component: (
+        <div className={`${cardFontClass} ${cardCompactClass}`}>
+          ${portfolioValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        </div>
+      ),
+      isCardStyle: true,
+    },
+    {
+      key: 'activeTrades',
+      name: 'Active Trades',
+      icon: <FaRegListAlt />,
+      component: <ActiveTrades />,
+      isCardStyle: true,
+    },
+    {
+      key: 'ticker',
+      name: 'Ticker',
+      icon: <FaChartLine />,
+      component: <MarketTicker />,
+    },
+    {
+      key: 'highPotentialTrades',
+      name: 'High Potential Trades',
+      icon: <FaChartLine />,
+      component: <HighPotentialTrades
+        onSymbolsUpdate={() => console.log('[HighPotentialTrades] onSymbolsUpdate called')}
+        onTradesSelected={() => console.log('[HighPotentialTrades] onTradesSelected called')}
+      />,
+    },
+    {
+      key: 'symbolAgent',
+      name: 'Symbol Agent',
+      icon: <FaCompassDrafting />,
+      component: <SignalGenerator />,
+    },
+    {
+      key: 'orders',
+      name: 'Orders',
+      icon: <FaListUl />,
+      component: <RecentOrders userId={userId} />,
+    },
+    {
+      key: 'symbolsList',
+      name: 'Symbols List',
+      icon: <FaListUl />,
+      component: (
+        <div className="w-full">
+          <MarketTicker showSymbolsListOnly={true} />
+        </div>
+      ),
+    },
+    {
+      key: 'buySell',
+      name: 'Buy/Sell Module',
+      icon: <RiMoneyDollarBoxLine />,
+      component: (
+        <div className="w-[350px]">
+          <BuySellModule
+            fetchSymbols={async () => {
+              console.log('[BuySellModule] fetchSymbols called');
+              return [];
             }}
-          >
-            List of Symbols
-          </Button>
-
-          <Card className="bg-[#1a1a1a] border-gray-700 w-full">
-            <CardHeader className="pb-1">
-              <CardTitle className="text-gray-300 text-sm">Buy / Sell</CardTitle>
-            </CardHeader>
-            <CardContent className="p-4">
-              <BuySellModule
-                fetchAccountAndPositions={fetchAllData}
-                fetchSymbols={async () => {}}
-                setLastOrderResponse={() => {}}
-              />
-            </CardContent>
-          </Card>
-
-          {/* Only change made here: added `open={symbolModalOpen}` */}
-          <SymbolListModal
-            symbols={symbols}
-            onClose={() => setSymbolModalOpen(false)}
-            open={symbolModalOpen}
+            setLastOrderResponse={(resp: any) => console.log('[BuySellModule] setLastOrderResponse called:', resp)}
           />
         </div>
+      ),
+    },
+  ];
+
+  console.log('[Dashboard] Modules defined:', modules.map((m) => ({ key: m.key, name: m.name })));
+
+  // Filter modules according to modulesVisible
+  const visibleModules = modules.filter((mod) => modulesVisible[mod.key]);
+
+  // Expose functions to parent via ref
+  useImperativeHandle(ref, () => ({
+    fetchAllData: () => {
+      console.log('[Dashboard] fetchAllData called via ref');
+      // Place to add any internal fetch logic if needed
+    },
+  }));
+
+  // Only show 'cash' and 'portfolio' modules on initial render
+  const initialCardOrder = ['cash', 'portfolio'];
+  useEffect(() => {
+    if (!localStorage.getItem('dashboardCardOrder')) {
+      localStorage.setItem('dashboardCardOrder', JSON.stringify(initialCardOrder));
+    }
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-black p-6 flex">
+      {/* Sidebar */}
+      <Sidebar
+        modulesVisible={modulesVisible}
+        toggleModuleVisibility={toggleModuleVisibility}
+        lockGrid={lockGrid}
+        toggleLockGrid={toggleLockGrid}
+      />
+
+      {/* Main dashboard content */}
+      <div className="flex-1 flex flex-col gap-6 ml-4 max-w-[2000px]">
+        <DashboardDnDWrapper
+          modules={visibleModules}
+          modulesVisible={modulesVisible}
+          toggleModuleVisibility={toggleModuleVisibility}
+          toggleSymbolsList={toggleSymbolsList}
+          isLocked={lockGrid}
+          toggleLockGrid={toggleLockGrid}
+        />
       </div>
+
+      {showSymbolsListOnly && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-4 rounded-lg w-96">
+            <h2 className="text-lg font-bold mb-4">Symbols List </h2>
+            <button
+              className="text-red-500 underline"
+              onClick={() => {
+                console.log('[Dashboard] Closing SymbolsList modal');
+                setshowSymbolsListOnly(false);
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 });

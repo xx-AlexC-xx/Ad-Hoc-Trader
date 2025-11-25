@@ -7,9 +7,9 @@ This module provides a client for interacting with Supabase to insert stock data
 
 from httpx import HTTPError
 from supabase import create_client, Client
-from ml_pipeline.historical_ingestion.config import SUPABASE_URL, SUPABASE_KEY
+from ml_pipeline.src.ml.config import SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
 
 def insert_stock_data(records):

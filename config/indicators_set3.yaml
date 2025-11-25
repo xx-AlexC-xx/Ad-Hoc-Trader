@@ -1,0 +1,26 @@
+# Trend-following with volatility confirmation
+indicators:
+  - name: wma
+    params:
+      length: 30
+  - name: wma
+    params:
+      length: 90
+  - name: kama
+    params:
+      length: 20
+  - name: adx
+    params:
+      length: 14
+  - name: atr
+    params:
+      length: 20
+  - name: macd
+    params:
+      fast: 8
+      slow: 21
+      signal: 5
+  - name: bbands
+    params:
+      length: 30
+      std: 2.5

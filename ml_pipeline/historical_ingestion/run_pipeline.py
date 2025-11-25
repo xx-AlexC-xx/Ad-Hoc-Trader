@@ -7,12 +7,17 @@ and inserts it into a database using Supabase.
 """
 
 import argparse
-import time
 import logging
-from ml_pipeline.historical_ingestion.supabase_client import insert_stock_data
-from ml_pipeline.historical_ingestion.ingest_historical import normalize_stock_data
+import time
+from datetime import datetime
+
+import pandas as pd
+
 from ml_pipeline.historical_ingestion.alpha_vantage_client import fetch_daily_adjusted
-from ml_pipeline.historical_ingestion.config import DEFAULT_SYMBOLS
+from ml_pipeline.historical_ingestion.ingest_historical import normalize_stock_data
+from ml_pipeline.historical_ingestion.supabase_client import insert_stock_data
+from ml_pipeline.src.ml.config import DEFAULT_SYMBOLS
+from ml_pipeline.src.ml.dataset_manager import ensure_data_dirs, save_dataset
 
 
 logging.basicConfig(
@@ -24,8 +29,8 @@ logging.basicConfig(
 def run(symbols):
     """
     Main function to run the historical stock data ingestion pipeline
-
     """
+    ensure_data_dirs()
     for symbol in symbols:
         logging.info("⏳ Processing: %s", symbol)
         raw_data = fetch_daily_adjusted(symbol)
@@ -33,6 +38,27 @@ def run(symbols):
             logging.warning("No data returned for %s", symbol)
             continue
         records = normalize_stock_data(symbol, raw_data)
+        if not records:
+            logging.warning("No normalized records for %s", symbol)
+            continue
+
+        try:
+            df_records = pd.DataFrame.from_records(records)
+            df_records["date"] = pd.to_datetime(df_records["date"])
+            df_records.set_index("date", inplace=True)
+            version_tag = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+            cache_path = save_dataset(
+                df_records,
+                dataset_type="raw",
+                symbol=symbol,
+                mode="daily",
+                outputsize="full",
+                version=version_tag,
+            )
+            logging.info("Cached dataset for %s at %s", symbol, cache_path)
+        except Exception as exc:  # pylint: disable=broad-except
+            logging.warning("Failed to cache dataset for %s: %s", symbol, exc)
+
         insert_stock_data(records)
         logging.info("✅ %s: %d records inserted", symbol, len(records))
 

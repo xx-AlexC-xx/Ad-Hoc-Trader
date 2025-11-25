@@ -1,0 +1,23 @@
+# Volume-weighted and adaptive signals
+indicators:
+  - name: vwma
+    params:
+      length: 20
+  - name: vwma
+    params:
+      length: 60
+  - name: kama
+    params:
+      length: 10
+  - name: kama
+    params:
+      length: 30
+  - name: rsi
+    params:
+      length: 14
+  - name: mfi
+    params:
+      length: 10
+  - name: atr
+    params:
+      length: 14

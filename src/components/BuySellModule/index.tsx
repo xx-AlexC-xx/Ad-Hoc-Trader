@@ -24,20 +24,20 @@ import TrailingStopForm from './TrailingStopForm';
 import EstimatedCost from './EstimatedCost';
 import ReviewOrderModal from './ReviewOrderModal';
 
+import { useAppContext } from '@/contexts/AppContext';
 import type { OrderSide, OrderType, TimeInForce } from './types';
 
 interface BuySellModuleProps {
   setLastOrderResponse: (data: any) => void;
-  fetchAccountAndPositions: () => Promise<void>;
-  fetchSymbols: () => Promise<void>;
+  fetchSymbols: () => Promise<any>;
 }
 
 const BuySellModule: React.FC<BuySellModuleProps> = ({
   setLastOrderResponse,
-  fetchAccountAndPositions,
   fetchSymbols,
 }) => {
   const user = useUser();
+  const { account, positions } = useAppContext(); // WebSocket-driven state
 
   const [symbol, setSymbol] = useState('');
   const [price, setPrice] = useState<number | null>(null);
@@ -132,10 +132,7 @@ const BuySellModule: React.FC<BuySellModuleProps> = ({
 
       if (user?.id) {
         try {
-          await Promise.all([
-            fetchAccountAndPositions(),
-            updateClosedTrades(user.id),
-          ]);
+          await updateClosedTrades(user.id); // WebSocket keeps account/positions updated
         } catch (err) {
           console.error('Post-order refresh failed:', err);
         }
